@@ -122,13 +122,29 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
-      const data = await res.json();
+
+      // Read raw text first to avoid JSON parse errors on empty responses
+      const raw = await res.text();
+      let data = null;
+      if (raw && raw.length > 0) {
+        try {
+          data = JSON.parse(raw);
+        } catch (e) {
+          console.error('Google auth: failed to parse JSON response', raw, e);
+          setError('Server returned an invalid response');
+          return;
+        }
+      } else {
+        console.error('Google auth: empty response body', { status: res.status, statusText: res.statusText });
+        setError('Empty response from authentication server');
+        return;
+      }
       if (data.success && data.token && data.user) {
         onLogin(data.user, data.token);
       } else {
         setError(data.message || 'Google sign-in failed');
       }
-    } catch (err) {
+      } catch (err) {
       console.error('Google sign-in error:', err);
       setError('Google sign-in error');
     } finally {
