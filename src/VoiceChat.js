@@ -35,7 +35,7 @@ const EXTRA_SUGGESTIONS = [
   { en: 'Where can I see past trends?', ur: 'گزشتہ رجحانات کہاں دیکھیں؟', hi: 'मैं पिछले रुझान कहां देखूं?' },
 ];
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app';
 
 const LANG_OPTIONS = [
   { id: 'en-US', label: 'English' },

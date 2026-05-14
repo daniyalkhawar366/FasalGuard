@@ -26,7 +26,7 @@ const SoilAnalysis = () => {
         return () => clearTimeout(timer);
     }, []);
 
-    const API_BASE_URL = 'http://localhost:5000';
+    const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app';
     
     const districts = [
         { name: 'Lahore', image: 'https://res.cloudinary.com/dun1zalow/image/upload/v1765225505/lahore_vrsi8u.jpg' },
@@ -326,7 +326,7 @@ const SoilAnalysis = () => {
                             <div className="error-message">
                                 ❌ {error}
                                 <p style={{ marginTop: '10px', fontSize: '14px' }}>
-                                    Make sure backend is running at: <code>http://localhost:5000</code>
+                                    Make sure backend is running and `REACT_APP_BACKEND_URL` is set for production.
                                 </p>
                             </div>
                         )}

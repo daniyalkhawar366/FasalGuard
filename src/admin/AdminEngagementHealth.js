@@ -15,7 +15,7 @@ const AdminEngagementHealth = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/admin/ops/engagement?days=30', {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/ops/engagement?days=30`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const payload = await res.json();

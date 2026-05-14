@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app';
 
 const toNumber = (value) => {
   const num = Number(value);

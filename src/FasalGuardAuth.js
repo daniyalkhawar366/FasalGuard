@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Leaf, Moon, Sun, ArrowRight, User, Mail, Lock, Eye, EyeOff, Info } from 'lucide-react';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
-const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app';
 
 const passwordRequirements = [
   { label: 'At least 8 characters', test: (v) => v.length >= 8 },
@@ -320,7 +320,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+      const response = await fetch(`${API_BASE}/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

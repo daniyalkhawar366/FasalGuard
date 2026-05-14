@@ -6,7 +6,7 @@ import './FarmerHistoryPage.css';
 import { useLanguage } from './context/LanguageContext';
 import CompactWeatherInfo from './components/CompactWeatherInfo';
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app';
 const SAT_OUTCOME_SESSION_KEY = 'sat_outcome_session_id';
 const SAT_HISTORY_REPORT_KEY = 'sat_history_full_report_v1';
 

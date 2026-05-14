@@ -55,7 +55,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/admin/users/${userId}/suspend`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/users/${userId}/suspend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/admin/users/${userId}/activate`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/users/${userId}/activate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
     setBroadcastLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/admin/broadcast-email', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/broadcast-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
   const fetchFeedback = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/feedback', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/feedback`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -175,7 +175,7 @@ const AdminDashboard = () => {
     setReplyLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/feedback/${feedbackId}/reply`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/feedback/${feedbackId}/reply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ const AdminDashboard = () => {
     }
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/feedback/${feedbackId}/status`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/feedback/${feedbackId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -286,19 +286,19 @@ const AdminDashboard = () => {
 
       // Demo mode: use lightweight endpoints only (skip /api/admin/dashboard and model checks).
       const [userStatsTimed, usersTimed, satelliteSummaryTimed, weatherTimed, analyticsTimed] = await Promise.all([
-        fetch('http://localhost:5000/api/admin/user-stats?days=30', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/user-stats?days=30`, {
           headers: { 'Authorization': `Bearer ${token}` },
         }),
-        fetch('http://localhost:5000/api/admin/users?all=true', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/users?all=true`, {
           headers: { 'Authorization': `Bearer ${token}` },
         }),
-        fetch('http://localhost:5000/api/admin/users/satellite-summary', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/users/satellite-summary`, {
           headers: { 'Authorization': `Bearer ${token}` },
         }),
-        fetch('http://localhost:5000/api/admin/weather-stats?days=7', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/weather-stats?days=7`, {
           headers: { 'Authorization': `Bearer ${token}` },
         }),
-        fetch('http://localhost:5000/api/admin/analytics?groupBy=month&metric=count', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/analytics?groupBy=month&metric=count`, {
           headers: { 'Authorization': `Bearer ${token}` },
         }),
       ]);
@@ -318,7 +318,7 @@ const AdminDashboard = () => {
       // Fetch current weather for 5 cities
       const cities = ['Lahore', 'Multan', 'Bahawalpur', 'Gujrat', 'Faisalabad'];
       const weatherPromises = cities.map(city => 
-        fetch(`http://localhost:5000/api/weather?city=${encodeURIComponent(city)}&days=1`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/weather?city=${encodeURIComponent(city)}&days=1`)
           .then(res => res.ok ? res.json() : null)
           .catch(() => null)
       );
@@ -329,13 +329,13 @@ const AdminDashboard = () => {
 
       // Service checks for demo dashboard (5 services).
       const [coreApiCheck, weatherServiceCheck, satelliteServiceCheck, cropServiceCheck, soilServiceCheck] = await Promise.all([
-        withTimeout('http://localhost:5000/api/health', {}, 2200),
-        withTimeout('http://localhost:5000/api/weather?city=Lahore&days=1', {}, 2200),
-        withTimeout('http://localhost:5000/api/admin/users/satellite-summary', {
+        withTimeout(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/health`, {}, 2200),
+        withTimeout(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/weather?city=Lahore&days=1`, {}, 2200),
+        withTimeout(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/admin/users/satellite-summary`, {
           headers: { 'Authorization': `Bearer ${token}` },
         }, 2200),
-        withTimeout('http://localhost:5000/api/predict/ml-health', {}, 2200),
-        withTimeout('http://localhost:5000/api/soil/health', {}, 2200),
+        withTimeout(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/predict/ml-health`, {}, 2200),
+        withTimeout(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/soil/health`, {}, 2200),
       ]);
 
       // Process weather trends from API responses

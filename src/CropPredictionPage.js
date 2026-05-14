@@ -47,7 +47,7 @@ export default function CropPredictionPage() {
   const fetchWeatherData = async (cityName) => {
     setLoadingWeather(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/weather?city=${cityName}&days=7`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/weather?city=${cityName}&days=7`);
       if (response.ok) {
         const data = await response.json();
         console.log('🌤️ Weather data received:', data);
@@ -89,7 +89,7 @@ export default function CropPredictionPage() {
       console.log('🌱 Sending AI prediction request:', requestData);
 
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/predict/ai-prediction', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/predict/ai-prediction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

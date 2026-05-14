@@ -66,7 +66,7 @@ export default function EnhancedIrrigationCalculator({ predictionData, city }) {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/analysis/irrigation-calculation', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/analysis/irrigation-calculation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

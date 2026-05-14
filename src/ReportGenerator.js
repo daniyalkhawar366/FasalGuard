@@ -33,7 +33,7 @@ export default function EnhancedReportGenerator({ predictionData, city }) {
         });
       }, 200);
 
-      const response = await fetch('http://localhost:5000/api/analysis/generate-report', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/analysis/generate-report`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -53,7 +53,7 @@ export default function EnhancedReportGenerator({ predictionData, city }) {
         setReportInfo(data.report);
         
         setTimeout(() => {
-          window.open(`http://localhost:5000/api/analysis/download-report/${data.report.id}`, '_blank');
+          window.open(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/analysis/download-report/${data.report.id}`, '_blank');
         }, 1000);
       } else {
         throw new Error(data.error || 'Failed to generate report');
@@ -314,7 +314,7 @@ export default function EnhancedReportGenerator({ predictionData, city }) {
               
               {reportInfo && (
                 <button
-                  onClick={() => window.open(`http://localhost:5000/api/analysis/download-report/${reportInfo.id}`, '_blank')}
+                  onClick={() => window.open(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/analysis/download-report/${reportInfo.id}`, '_blank')}
                   style={{
                     background: '#ffffff',
                     border: '1px solid rgba(59, 130, 246, 0.35)',
@@ -715,7 +715,7 @@ export default function EnhancedReportGenerator({ predictionData, city }) {
               
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button
-                  onClick={() => window.open(`http://localhost:5000/api/analysis/download-report/${reportInfo.id}`, '_blank')}
+                  onClick={() => window.open(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/analysis/download-report/${reportInfo.id}`, '_blank')}
                   style={{
                     background: '#3b82f6',
                     color: 'white',

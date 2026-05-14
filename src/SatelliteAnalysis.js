@@ -71,7 +71,7 @@ const CROPS = [
 
 const MAP_MAX_ZOOM = 19;
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app';
 const VOICE_REPORT_LANGUAGES = [
   { id: 'en-US', label: 'English' },
   { id: 'ur-PK', label: 'اردو' },
