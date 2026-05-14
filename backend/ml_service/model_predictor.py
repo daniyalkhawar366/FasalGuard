@@ -11,7 +11,17 @@ warnings.filterwarnings('ignore')
 class ModelPredictor:
     def __init__(self):
         self.models = {}
-        self.models_dir = '../ml_models'
+        
+        # Resolve models directory - works in both local and Docker environments
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.models_dir = os.path.abspath(os.path.join(current_dir, '..', 'ml_models'))
+        
+        # Fallback for Docker container
+        if not os.path.exists(self.models_dir):
+            docker_models_dir = os.path.abspath(os.path.join('/app', 'ml_models'))
+            if os.path.exists(docker_models_dir):
+                self.models_dir = docker_models_dir
+        
         self.load_all_models()
     
     def load_all_models(self):
@@ -20,6 +30,11 @@ class ModelPredictor:
         model_types = ['gru', 'lstm']
         
         print("🔄 Loading ML models...")
+        print(f"📂 Models directory: {self.models_dir}")
+        print(f"✓ Directory exists: {os.path.exists(self.models_dir)}")
+        
+        if os.path.exists(self.models_dir):
+            print(f"📋 Files in directory: {os.listdir(self.models_dir)}")
         
         for crop in crops:
             for model_type in model_types:

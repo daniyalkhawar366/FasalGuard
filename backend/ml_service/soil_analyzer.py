@@ -75,10 +75,27 @@ class SoilAnalyzer:
         try:
             # Resolve model path relative to this file for portability
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            # ml_service is inside backend/, so go up one level to reach ml_models/
+            
+            # Try multiple path resolution strategies
+            # Strategy 1: Docker path (backend/ml_service -> ../ml_models/soil_models)
             model_path = os.path.abspath(os.path.join(current_dir, '..', 'ml_models', 'soil_models'))
+            
+            # Strategy 2: If strategy 1 doesn't work, try from /app/ml_models
+            if not os.path.exists(model_path):
+                alt_path = os.path.abspath(os.path.join('/app', 'ml_models', 'soil_models'))
+                if os.path.exists(alt_path):
+                    model_path = alt_path
+            
+            # Strategy 3: Try from current working directory
+            if not os.path.exists(model_path):
+                cwd_path = os.path.abspath(os.path.join(os.getcwd(), '..', 'ml_models', 'soil_models'))
+                if os.path.exists(cwd_path):
+                    model_path = cwd_path
 
-            print(f"🔍 Looking for models in: {model_path}")
+            print(f"🔍 Looking for soil models in: {model_path}")
+            print(f"   Path exists: {os.path.exists(model_path)}")
+            print(f"   Current directory: {current_dir}")
+            print(f"   Working directory: {os.getcwd()}")
             
             # Check if models exist
             required_files = [
