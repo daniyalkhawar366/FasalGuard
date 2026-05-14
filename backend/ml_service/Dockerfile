@@ -6,9 +6,12 @@ WORKDIR /app
 COPY backend/ml_service/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r ./requirements.txt
 
-# Copy ML service source and models
+# Copy ML service source, models, and credentials
 COPY backend/ml_service ./ml_service
 COPY backend/ml_models ./ml_models
+
+# Copy GEE credentials if they exist
+COPY backend/ml_service/gee_credentials.json ./ml_service/gee_credentials.json
 
 WORKDIR /app/ml_service
 
