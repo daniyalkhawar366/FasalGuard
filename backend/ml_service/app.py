@@ -458,7 +458,8 @@ if __name__ == '__main__':
     print(f"   /api/soil/manual - Soil analysis with manual parameters")
     print(f"   /api/weather - Weather data (for frontend)")
     print(f"   /api/predict/ai-prediction - AI crop prediction")
-    print(f"\n🔧 Running on port 5001")
+    port = int(os.getenv('PORT', '5001'))
+    print(f"\n🔧 Running on port {port}")
     print("=" * 60)
-    
-    app.run(host='0.0.0.0', port=5001, debug=False)
+
+    app.run(host='0.0.0.0', port=port, debug=False)
