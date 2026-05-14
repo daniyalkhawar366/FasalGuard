@@ -24,6 +24,18 @@ def pad_to_365_days(features, target_days=365):
 app = Flask(__name__)
 CORS(app)
 
+# Initialize Google Earth Engine on startup
+print("\n🚀 Initializing ML Service models...")
+print("📦 Models loaded:")
+print(f"   - Crop yield models: {predictor.get_loaded_models()['models_count']}")
+print(f"   - Soil analysis: {soil_analyzer.get_model_status()['loaded']}")
+try:
+    # Try to initialize GEE (may fail if credentials not available, which is OK)
+    from satellite_predictor import _init_gee
+    _init_gee()
+except Exception as e:
+    print(f"ℹ️  GEE initialization not attempted (OK if not using GEE): {e}")
+
 @app.route('/health', methods=['GET'])
 def health():
     """Health check endpoint"""

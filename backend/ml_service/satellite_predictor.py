@@ -242,31 +242,67 @@ def _init_gee():
         ee = _ee
         current_dir = os.path.dirname(os.path.abspath(__file__))
 
-        creds_path = _resolve_path(
-            os.getenv('GEE_CREDENTIALS_PATH'),
-            os.path.join(current_dir, 'gee_credentials.json'),
-            os.path.join(current_dir, '..', 'gee_credentials.json'),
-            os.path.join(current_dir, '..', '..', 'gee_credentials.json'),
-        )
+        # Strategy 1: Try environment variable with credentials JSON
+        creds_data = None
+        gee_creds_json_env = os.getenv('GEE_CREDENTIALS_JSON')
+        if gee_creds_json_env:
+            try:
+                creds_data = json.loads(gee_creds_json_env)
+                print(f'📋 Using GEE credentials from GEE_CREDENTIALS_JSON environment variable')
+            except json.JSONDecodeError as e:
+                print(f'⚠️  GEE_CREDENTIALS_JSON is not valid JSON: {e}')
+                creds_data = None
 
-        if not creds_path or not os.path.exists(creds_path):
-            raise FileNotFoundError(
-                'Google Earth Engine credentials not found. Set GEE_CREDENTIALS_PATH or place gee_credentials.json in backend/ml_service/.'
+        # Strategy 2: Try file path
+        if not creds_data:
+            creds_path = _resolve_path(
+                os.getenv('GEE_CREDENTIALS_PATH'),
+                os.path.join(current_dir, 'gee_credentials.json'),
+                os.path.join(current_dir, '..', 'gee_credentials.json'),
+                os.path.join(current_dir, '..', '..', 'gee_credentials.json'),
             )
 
-        with open(creds_path, 'r', encoding='utf-8') as handle:
-            creds_data = json.load(handle)
+            if creds_path and os.path.exists(creds_path):
+                with open(creds_path, 'r', encoding='utf-8') as handle:
+                    creds_data = json.load(handle)
+                print(f'📋 Using GEE credentials from file: {creds_path}')
+            else:
+                if creds_path:
+                    print(f'⚠️  GEE credentials file not found at: {creds_path}')
+
+        if not creds_data:
+            raise FileNotFoundError(
+                'Google Earth Engine credentials not found. Either:\n'
+                '  1. Set GEE_CREDENTIALS_JSON environment variable with full JSON credentials, or\n'
+                '  2. Set GEE_CREDENTIALS_PATH environment variable pointing to credentials file, or\n'
+                '  3. Place gee_credentials.json in backend/ml_service/ directory'
+            )
 
         service_account = creds_data.get('client_email')
         if not service_account:
             raise ValueError('GEE credentials JSON is missing client_email')
 
-        credentials = ee.ServiceAccountCredentials(service_account, creds_path)
+        # For env var strategy, we need to save to temp file since ee.ServiceAccountCredentials expects a path
+        if gee_creds_json_env:
+            creds_file = os.path.join(current_dir, '.gee_creds_tmp.json')
+            with open(creds_file, 'w') as f:
+                json.dump(creds_data, f)
+            credentials = ee.ServiceAccountCredentials(service_account, creds_file)
+        else:
+            # For file-based credentials
+            creds_file = _resolve_path(
+                os.getenv('GEE_CREDENTIALS_PATH'),
+                os.path.join(current_dir, 'gee_credentials.json'),
+                os.path.join(current_dir, '..', 'gee_credentials.json'),
+                os.path.join(current_dir, '..', '..', 'gee_credentials.json'),
+            )
+            credentials = ee.ServiceAccountCredentials(service_account, creds_file)
+
         gee_project_id = os.getenv('GEE_PROJECT_ID', GEE_PROJECT_ID)
         ee.Initialize(credentials, project=gee_project_id)
         GEE_INITIALIZED = True
         GEE_LAST_ERROR = None
-        GEE_CREDENTIALS_USED = creds_path
+        GEE_CREDENTIALS_USED = service_account
         print(f'✅ GEE initialised for project {gee_project_id} using {service_account}')
     except Exception as exc:
         GEE_INITIALIZED = False
