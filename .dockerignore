@@ -3,7 +3,6 @@ build
 .git
 .gitignore
 backend/node_modules
-backend/ml_models
 backend/ml_service/.venv
 backend/ml_service/__pycache__
 backend/ml_service/*.pyc
