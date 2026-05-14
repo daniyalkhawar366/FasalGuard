@@ -2,12 +2,14 @@ FROM node:18-slim
 
 WORKDIR /app
 
-COPY package*.json ./
+# Install only backend dependencies by copying backend package files
+COPY backend/package*.json ./
 RUN npm install --omit=dev
 
-COPY . .
+# Copy backend source into container root and run server from there
+COPY backend/ ./
 
 ENV NODE_ENV=production
 EXPOSE 5000
 
-CMD ["node", "backend/server.js"]
+CMD ["node", "server.js"]
