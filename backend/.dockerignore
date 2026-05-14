@@ -1,5 +1,4 @@
 node_modules
-ml_models
 ml_service/notebooks
 ml_service/__pycache__
 ml_service/*.pyc
