@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Leaf, Moon, Sun, ArrowRight, User, Mail, Lock, Eye, EyeOff, Info } from 'lucide-react';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+
 const passwordRequirements = [
   { label: 'At least 8 characters', test: (v) => v.length >= 8 },
   { label: 'One uppercase letter', test: (v) => /[A-Z]/.test(v) },
@@ -76,7 +78,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +117,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
 
       setLoading(true);
       const body = idToken ? { idToken } : { accessToken };
-      const res = await fetch('http://localhost:5000/api/auth/google', {
+      const res = await fetch(`${API_BASE}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -152,7 +154,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -191,7 +193,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
     setSuccess('');
     try {
       const endpoint = flow === 'verify' ? '/api/auth/verify-email' : '/api/auth/verify-reset';
-      const response = await fetch(`http://localhost:5000${endpoint}`, {
+      const response = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code })
@@ -201,7 +203,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
         if (flow === 'verify') {
           // After verification, auto-login
           try {
-            const loginRes = await fetch('http://localhost:5000/api/auth/login', {
+            const loginRes = await fetch(`${API_BASE}/api/auth/login`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email, password })
@@ -235,7 +237,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
     setSuccess('');
     try {
       const endpoint = flow === 'verify' ? '/api/auth/resend-verification' : '/api/auth/resend-reset';
-      const response = await fetch(`http://localhost:5000/api/auth${endpoint}`, {
+      const response = await fetch(`${API_BASE}/api/auth${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -268,7 +270,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
     try {
       // Use the verified OTP from previous step
       const code = verifiedOtp;
-      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
+      const response = await fetch(`${API_BASE}/api/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code, newPassword: newPassword1 })
