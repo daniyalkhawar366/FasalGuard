@@ -1,0 +1,16 @@
+{
+  "feature_names": [
+    "ndwi",
+    "evi",
+    "gndvi",
+    "month",
+    "growth_stage_code"
+  ],
+  "model_type": "XGBoost + RF + LR Ensemble",
+  "training_date": "2026-03-11",
+  "training_samples": 76,
+  "total_samples": 95,
+  "test_accuracy": 0.8421052631578947,
+  "cv_accuracy": 1.0,
+  "roc_auc": 0.9761904761904762
+}

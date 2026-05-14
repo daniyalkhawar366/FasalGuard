@@ -1,0 +1,36 @@
+{
+  "crop": "sugarcane",
+  "feature_names": [
+    "ndvi",
+    "ndwi",
+    "evi",
+    "savi",
+    "gndvi",
+    "ndre",
+    "month",
+    "growth_stage_code",
+    "ndvi_deviation",
+    "ndwi_deviation",
+    "evi_deviation",
+    "gndvi_deviation"
+  ],
+  "model_type": "XGBoost + RF + LR Ensemble",
+  "training_date": "2026-03-29",
+  "season_months": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "training_samples": 899,
+  "total_samples": 1124,
+  "test_accuracy": 0.9644444444444444,
+  "cv_accuracy": 0.9477405338299192,
+  "roc_auc": 0.9962650985378257
+}

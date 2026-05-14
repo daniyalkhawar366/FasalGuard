@@ -1,0 +1,17 @@
+{
+  "feature_names": [
+    "ndvi",
+    "ndwi",
+    "evi",
+    "savi",
+    "gndvi",
+    "ndre"
+  ],
+  "model_type": "XGBoost + RF + LR Ensemble",
+  "training_date": "2026-03-06",
+  "training_samples": 943,
+  "total_samples": 1179,
+  "test_accuracy": 0.940677966101695,
+  "cv_accuracy": 0.9639254756276033,
+  "roc_auc": 0.9835542997899007
+}
