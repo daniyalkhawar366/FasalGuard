@@ -39,11 +39,37 @@ const { buildDistrictSoilTrendSummary } = require('./utils/soilTrendHelper');
 
 const app = express();
 
+const defaultFrontendOrigins = [
+  'http://localhost:3000',
+  'http://localhost:8080',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:8080',
+];
+
+const configuredFrontendOrigins = String(process.env.FRONTEND_URLS || process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOrigins = [...new Set([...defaultFrontendOrigins, ...configuredFrontendOrigins])];
+
 // Middleware - MOVE THIS BEFORE ROUTES
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com'] 
-    : ['http://localhost:3000'],
+  origin(origin, callback) {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin ${origin}`));
+  },
   credentials: true
 }));
 

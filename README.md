@@ -195,6 +195,30 @@ npm start  # Starts React development server
 4. Deploy backend to your preferred hosting service
 5. Configure CORS for your production domain
 
+## Docker Deployment
+
+Use the root `docker-compose.yml` to run the full stack locally with Docker:
+
+1. Make sure Docker Desktop is running.
+2. Update `backend/config.env` with your MongoDB, JWT, email, and weather values if needed.
+3. Start the stack from the repository root:
+
+```bash
+docker compose up --build
+```
+
+4. Open the app at `http://localhost:8080`.
+5. Verify the API at `http://localhost:5000/api/health`.
+
+The compose stack includes:
+
+1. `mongo` on port `27017`
+2. `backend` on port `5000`
+3. `ml_service` on port `5001`
+4. `frontend` on port `8080`
+
+If you want to use MongoDB Atlas instead of the local MongoDB container, change `MONGO_URI` in `docker-compose.yml` or `backend/config.env` to your Atlas connection string.
+
 ## Technologies Used
 
 **Frontend:**

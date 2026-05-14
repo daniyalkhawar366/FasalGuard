@@ -1,0 +1,10 @@
+node_modules
+ml_models
+ml_service/notebooks
+ml_service/__pycache__
+ml_service/*.pyc
+ml_service/.pytest_cache
+ml_service/.mypy_cache
+ml_service/.venv
+ml_service/venv
+**/.DS_Store

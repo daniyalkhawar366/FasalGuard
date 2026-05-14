@@ -166,9 +166,25 @@ const buildPredictionVoiceSummary = ({ predictionData, inputData, lang = 'en', m
 
 // CORS middleware (if not already in main app)
 router.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  const defaultOrigins = [
+    'http://localhost:3000',
+    'http://localhost:8080',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8080',
+  ];
+  const configuredOrigins = String(process.env.FRONTEND_URLS || process.env.FRONTEND_URL || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const allowedOrigins = [...new Set([...defaultOrigins, ...configuredOrigins])];
+  const requestOrigin = req.headers.origin;
+
+  if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+    res.header('Access-Control-Allow-Origin', requestOrigin);
+  }
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
   
   if (req.method === 'OPTIONS') {
     return res.status(200).end();

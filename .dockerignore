@@ -1,0 +1,13 @@
+node_modules
+build
+.git
+.gitignore
+backend/node_modules
+backend/ml_models
+backend/ml_service/.venv
+backend/ml_service/__pycache__
+backend/ml_service/*.pyc
+backend/ml_service/.pytest_cache
+backend/ml_service/.mypy_cache
+**/dist
+**/.DS_Store
