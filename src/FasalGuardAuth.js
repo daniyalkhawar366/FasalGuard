@@ -354,36 +354,43 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
     leftSection: {
       flex: 1,
       position: 'relative',
-      background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 30%, #bbf7d0 60%, #86efac 100%)',
+      backgroundImage: 'url(/auth_bg.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
       display: 'flex',
-      alignItems: 'center',
+      flexDirection: 'column',
       justifyContent: 'center',
-      padding: '2rem',
+      alignItems: 'flex-start',
+      padding: '4rem',
       transform: 'translateX(0)',
     },
-    imageBox: {
-      position: 'relative',
-      width: '100%',
-      maxWidth: '500px',
+    leftOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(4, 47, 26, 0.55)',
     },
-    leftHeroImage: {
-      width: '100%',
-      height: '400px',
-      objectFit: 'cover',
-      borderRadius: '20px',
-      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    leftContent: {
+      position: 'relative',
+      zIndex: 1,
+      color: '#ffffff',
+      maxWidth: '480px',
     },
     leftLogoText: {
-      position: 'absolute',
-      top: '-70px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      fontSize: 'clamp(1.75rem, 4vw, 3rem)',
-      fontWeight: 'bold',
-      color: '#065f46',
-      letterSpacing: '0.15em',
-      textShadow: '0 4px 20px rgba(16, 185, 129, 0.3)',
-      whiteSpace: 'nowrap',
+      fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+      fontWeight: '800',
+      color: '#ffffff',
+      marginBottom: '1rem',
+      letterSpacing: '0.05em',
+      textShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+    },
+    leftTagline: {
+      fontSize: '1.25rem',
+      lineHeight: '1.6',
+      color: '#e2e8f0',
+      textShadow: '0 2px 10px rgba(0, 0, 0, 0.4)',
     },
     rightSection: {
       flex: 1,
@@ -557,10 +564,10 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
   return (
     <div style={styles.mainContainer}>
       <div style={styles.leftSection}>
-        <div style={styles.imageBox}>
-          <img style={styles.leftHeroImage} src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449" alt="Aerial view of green corn field" />
-
-            <div style={styles.leftLogoText}>FasalGuard</div>
+        <div style={styles.leftOverlay} />
+        <div style={styles.leftContent}>
+          <div style={styles.leftLogoText}>FasalGuard</div>
+          <p style={styles.leftTagline}>Empowering modern farmers with satellite-driven insights, precise weather forecasts, and smart yield prediction to grow more with less.</p>
         </div>
       </div>
       <div style={styles.rightSection}>
@@ -572,8 +579,8 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
                   <Leaf color="white" size={32} />
                 </div>
                 <div style={styles.headerText}>
-                  <h1 style={styles.title}>Welcome to FasalGuard</h1>
-                  <p style={styles.subtitle}>Sign in to continue</p>
+                  <h1 style={styles.title}>Welcome to Your Smart Farm</h1>
+                  <p style={styles.subtitle}>Access your field insights and satellite data</p>
                 </div>
               </div>
               <div>
@@ -741,8 +748,8 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
                   <Leaf color="white" size={32} />
                 </div>
                 <div style={styles.headerText}>
-                  <h1 style={styles.title}>Join FasalGuard</h1>
-                  <p style={styles.subtitle}>Create your account</p>
+                  <h1 style={styles.title}>Start Your Smart Farming Journey</h1>
+                  <p style={styles.subtitle}>Join the modern agricultural community</p>
                 </div>
               </div>
               <div>
