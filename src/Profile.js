@@ -1,447 +1,36 @@
-import React, { useState } from 'react';
-import { Leaf, User, Lock, Camera, Save } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Bell, Leaf, Lock, MapPin, Save, ShieldCheck, User } from 'lucide-react';
 
-const styles = {
-  page: {
-    minHeight: '100vh',
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-    color: '#222',
-    padding: 0,
-    margin: 0,
-    background: '#0a0e0d',
-    position: 'relative',
-    overflowX: 'hidden',
-  },
-  bgPattern: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 80%, rgba(5, 150, 105, 0.15) 0%, transparent 50%),
-                      radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)`,
-    zIndex: 0,
-  },
-  header: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    padding: '2rem 3rem',
-    zIndex: 100,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    background: 'rgba(10, 14, 13, 0.95)',
-    backdropFilter: 'blur(20px)',
-    // Removed borderBottom for no boundary
-  },
-  logo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-  },
-  logoIcon: {
-    border: '2px solid #10b981',
-    borderRadius: '50%',
-    padding: '0.3rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoText: {
-    fontSize: '1rem',
-    fontWeight: 400,
-    color: '#059669',
-    letterSpacing: '3px',
-    textTransform: 'uppercase',
-  },
-  nav: {
-    display: 'flex',
-    gap: '3rem',
-    alignItems: 'center',
-  },
-  navLink: {
-    color: '#9ca3af',
-    fontSize: '0.9rem',
-    fontWeight: 400,
-    textDecoration: 'none',
-    letterSpacing: '0.5px',
-    cursor: 'pointer',
-    transition: 'color 0.3s',
-    background: 'transparent',
-    border: 'none',
-    outline: 'none',
-    padding: 0,
-  },
-  container: {
-    position: 'relative',
-    zIndex: 1,
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '6rem 2rem 4rem 2rem',
-  },
-  pageHeader: {
-    marginBottom: '3rem',
-  },
-  pageTitle: {
-    fontSize: '3rem',
-    fontWeight: 600,
-    background: 'linear-gradient(135deg, #fff 0%, #a3a3a3 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    marginBottom: '0.5rem',
-    letterSpacing: '1px',
-  },
-  pageSubtitle: {
-    fontSize: '1.1rem',
-    color: '#6b7280',
-    fontWeight: 300,
-  },
-  contentGrid: {
-    display: 'grid',
-    gridTemplateColumns: '320px 1fr',
-    gap: '2rem',
-  },
-  sidebar: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  profileCard: {
-    background: 'rgba(17, 24, 39, 0.6)',
-    backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(16, 185, 129, 0.2)',
-    borderRadius: '1.5rem',
-    padding: '2rem',
-    textAlign: 'center',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  profileCardGlow: {
-    position: 'absolute',
-    top: '-50%',
-    left: '-50%',
-    right: '-50%',
-    bottom: '-50%',
-    background: 'radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%)',
-    animation: 'pulse 4s ease-in-out infinite',
-  },
-  avatarWrapper: {
-    position: 'relative',
-    width: '120px',
-    height: '120px',
-    margin: '0 auto 1.5rem',
-  },
-  avatar: {
-    width: '120px',
-    height: '120px',
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#fff',
-    fontSize: '2.5rem',
-    fontWeight: 600,
-    border: '3px solid rgba(16, 185, 129, 0.3)',
-    boxShadow: '0 0 30px rgba(16, 185, 129, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.1)',
-    position: 'relative',
-    zIndex: 2,
-  },
-  cameraButton: {
-    position: 'absolute',
-    bottom: '5px',
-    right: '5px',
-    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    border: 'none',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
-    transition: 'all 0.3s',
-    zIndex: 3,
-  },
-  userName: {
-    fontSize: '1.5rem',
-    fontWeight: 600,
-    color: '#fff',
-    marginBottom: '0.25rem',
-    position: 'relative',
-    zIndex: 2,
-  },
-  userEmail: {
-    fontSize: '0.95rem',
-    color: '#9ca3af',
-    fontWeight: 300,
-    position: 'relative',
-    zIndex: 2,
-  },
-  statsGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '1rem',
-    marginTop: '1.5rem',
-    position: 'relative',
-    zIndex: 2,
-  },
-  statBox: {
-    padding: '1rem',
-    background: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: '0.75rem',
-    border: '1px solid rgba(16, 185, 129, 0.2)',
-  },
-  statValue: {
-    fontSize: '1.5rem',
-    fontWeight: 600,
-    color: '#10b981',
-    marginBottom: '0.25rem',
-  },
-  statLabel: {
-    fontSize: '0.75rem',
-    color: '#9ca3af',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-  menuCard: {
-    background: 'rgba(17, 24, 39, 0.6)',
-    backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(16, 185, 129, 0.2)',
-    borderRadius: '1.5rem',
-    padding: '1rem',
-  },
-  menuItem: {
-    padding: '1rem',
-    marginBottom: '0.5rem',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    color: '#9ca3af',
-    transition: 'all 0.3s',
-    fontSize: '0.95rem',
-  },
-  menuItemActive: {
-    padding: '1rem',
-    marginBottom: '0.5rem',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%)',
-    border: '1px solid rgba(16, 185, 129, 0.3)',
-    color: '#10b981',
-    transition: 'all 0.3s',
-    fontSize: '0.95rem',
-    fontWeight: 500,
-  },
-  mainContent: {
-    background: 'rgba(17, 24, 39, 0.6)',
-    backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(16, 185, 129, 0.2)',
-    borderRadius: '1.5rem',
-    padding: '3rem',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  contentGlow: {
-    position: 'absolute',
-    top: '-50%',
-    right: '-20%',
-    width: '400px',
-    height: '400px',
-    background: 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)',
-    borderRadius: '50%',
-    pointerEvents: 'none',
-  },
-  sectionTitle: {
-    fontSize: '2rem',
-    fontWeight: 600,
-    color: '#fff',
-    marginBottom: '0.5rem',
-    position: 'relative',
-    zIndex: 2,
-  },
-  sectionSubtitle: {
-    fontSize: '1rem',
-    color: '#9ca3af',
-    fontWeight: 300,
-    marginBottom: '3rem',
-    position: 'relative',
-    zIndex: 2,
-  },
-  formGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: '2rem',
-    position: 'relative',
-    zIndex: 2,
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem',
-  },
-  formGroupFull: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem',
-    gridColumn: '1 / -1',
-  },
-  label: {
-    fontSize: '0.85rem',
-    fontWeight: 500,
-    color: '#d1d5db',
-    letterSpacing: '0.5px',
-    textTransform: 'uppercase',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-  },
-  inputWrapper: {
-    position: 'relative',
-  },
-  input: {
-    width: '100%',
-    padding: '1rem 1.25rem',
-    fontSize: '1rem',
-    fontWeight: 300,
-    color: '#fff',
-    background: 'rgba(31, 41, 55, 0.5)',
-    border: '1px solid rgba(16, 185, 129, 0.2)',
-    borderRadius: '0.75rem',
-    outline: 'none',
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-    transition: 'all 0.3s',
-  },
-  inputDisabled: {
-    width: '100%',
-    padding: '1rem 1.25rem',
-    fontSize: '1rem',
-    fontWeight: 300,
-    color: '#6b7280',
-    background: 'rgba(31, 41, 55, 0.3)',
-    border: '1px solid rgba(75, 85, 99, 0.3)',
-    borderRadius: '0.75rem',
-    outline: 'none',
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-    cursor: 'not-allowed',
-  },
-  inputIcon: {
-    position: 'absolute',
-    right: '1rem',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#6b7280',
-    cursor: 'pointer',
-  },
-  divider: {
-    height: '1px',
-    background: 'linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.3) 50%, transparent 100%)',
-    margin: '3rem 0',
-    position: 'relative',
-    zIndex: 2,
-  },
-  buttonGroup: {
-    display: 'flex',
-    gap: '1rem',
-    justifyContent: 'flex-end',
-    marginTop: '3rem',
-    position: 'relative',
-    zIndex: 2,
-  },
-  btnSecondary: {
-    padding: '1rem 2rem',
-    fontSize: '0.95rem',
-    fontWeight: 500,
-    color: '#d1d5db',
-    background: 'rgba(31, 41, 55, 0.5)',
-    border: '1px solid rgba(16, 185, 129, 0.2)',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
-    letterSpacing: '0.5px',
-    transition: 'all 0.3s',
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-  },
-  btnPrimary: {
-    padding: '1rem 2.5rem',
-    fontSize: '0.95rem',
-    fontWeight: 500,
-    color: '#fff',
-    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    border: 'none',
-    borderRadius: '0.75rem',
-    cursor: 'pointer',
-    letterSpacing: '0.5px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3)',
-    transition: 'all 0.3s',
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-  },
-  alert: {
-    padding: '1.25rem',
-    background: 'rgba(245, 158, 11, 0.1)',
-    border: '1px solid rgba(245, 158, 11, 0.3)',
-    borderRadius: '0.75rem',
-    marginBottom: '2rem',
-    display: 'flex',
-    gap: '1rem',
-    alignItems: 'start',
-    position: 'relative',
-    zIndex: 2,
-  },
-  alertIcon: {
-    color: '#f59e0b',
-    flexShrink: 0,
-  },
-  alertText: {
-    fontSize: '0.9rem',
-    color: '#fbbf24',
-    lineHeight: '1.6',
-  },
-};
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app';
 
 export default function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  React.useEffect(() => {
-    if (user) {
-      console.log('Profile user object:', user);
-    }
-  }, [user]);
   const [name, setName] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [saveMsg, setSaveMsg] = useState('');
   const [loading, setLoading] = useState(true);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [saveMsg, setSaveMsg] = useState('');
+  const [alerts, setAlerts] = useState({ satellite: true, anomaly: true, weather: false });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/login');
       return;
     }
-    fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/auth/me`, {
+
+    fetch(`${API_BASE}/api/auth/me`, {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.success && data.user) {
           setUser(data.user);
           setName(data.user.name || '');
@@ -457,6 +46,15 @@ export default function Profile() {
       .finally(() => setLoading(false));
   }, [navigate]);
 
+  useEffect(() => {
+    if (!showDropdown) return;
+    const handleClick = (event) => {
+      if (!event.target.closest('.profileIcon')) setShowDropdown(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showDropdown]);
+
   const handleSave = async () => {
     setSaveMsg('');
     const token = localStorage.getItem('token');
@@ -464,9 +62,7 @@ export default function Profile() {
       navigate('/login');
       return;
     }
-    let nameUpdateSuccess = false;
-    let passwordUpdateSuccess = false;
-    // If password fields are filled, update both name and password in one request
+
     if (user?.provider !== 'google' && (currentPassword || newPassword || confirmPassword)) {
       if (!currentPassword || !newPassword || !confirmPassword) {
         setSaveMsg('Please fill all password fields.');
@@ -476,282 +72,529 @@ export default function Profile() {
         setSaveMsg('New passwords do not match.');
         return;
       }
-      // Strong password validation (same as signup)
       if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(newPassword)) {
         setSaveMsg('Password must be at least 8 characters and include uppercase, lowercase, number, and special character.');
         return;
       }
-      try {
-        const res = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/auth/profile`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ name, currentPassword, newPassword })
-        });
-        const data = await res.json();
-        if (data.success) {
-          setUser(data.user);
-          nameUpdateSuccess = true;
-          passwordUpdateSuccess = true;
-          setCurrentPassword('');
-          setNewPassword('');
-          setConfirmPassword('');
-        } else {
-          setSaveMsg(data.message || 'Failed to update profile or password.');
-          return;
-        }
-      } catch (err) {
-        setSaveMsg('Error updating profile or password.');
-        return;
-      }
-    } else {
-      // Only name update
-      try {
-        const res = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'https://fasalguard-production.up.railway.app'}/api/auth/profile`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ name })
-        });
-        const data = await res.json();
-        if (data.success) {
-          setUser(data.user);
-          nameUpdateSuccess = true;
-        } else {
-          setSaveMsg(data.message || 'Failed to update name.');
-          return;
-        }
-      } catch (err) {
-        setSaveMsg('Error updating name.');
-        return;
-      }
     }
-    if (nameUpdateSuccess && passwordUpdateSuccess) {
-      setSaveMsg('Profile and password updated!');
-    } else if (nameUpdateSuccess) {
-      setSaveMsg('Profile updated!');
-    } else if (passwordUpdateSuccess) {
-      setSaveMsg('Password updated!');
+
+    try {
+      const payload = user?.provider !== 'google' && (currentPassword || newPassword || confirmPassword)
+        ? { name, currentPassword, newPassword }
+        : { name };
+
+      const response = await fetch(`${API_BASE}/api/auth/profile`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        setUser(data.user);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setSaveMsg('Profile saved successfully.');
+      } else {
+        setSaveMsg(data.message || 'Unable to update profile.');
+      }
+    } catch {
+      setSaveMsg('Unable to update profile right now.');
     }
   };
 
-  // Profile dropdown logic
-  const [showDropdown, setShowDropdown] = useState(false);
-  React.useEffect(() => {
-    if (!showDropdown) return;
-    const handleClick = (e) => {
-      const profileIcon = document.querySelector('.profileIcon');
-      const dropdown = document.querySelector('[tabindex="-1"]');
-      if (profileIcon && dropdown && !profileIcon.contains(e.target) && !dropdown.contains(e.target)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, [showDropdown]);
-
-  // Restrict Account/profile button to logged-in users
-  const handleAccountClick = () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      window.location.replace('/login');
-    } else {
-      navigate('/profile');
-    }
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
   };
+
+  const initials = (name || user?.email || 'F').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
+
+  const styles = {
+    page: {
+      height: '100vh',
+      overflow: 'hidden',
+      display: 'grid',
+      gridTemplateRows: 'auto 1fr',
+      background: 'linear-gradient(180deg, #f4f8f2 0%, #eef5ea 100%)',
+      color: '#0f172a',
+      fontFamily: 'Inter, Arial, sans-serif',
+    },
+    header: {
+      position: 'sticky',
+      top: 0,
+      zIndex: 20,
+      background: 'rgba(244, 248, 242, 0.95)',
+      backdropFilter: 'blur(14px)',
+      borderBottom: '1px solid rgba(148, 163, 184, 0.16)',
+    },
+    headerInner: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '14px 24px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '16px',
+      flexWrap: 'wrap',
+    },
+    brand: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '10px',
+      border: 'none',
+      background: 'transparent',
+      padding: 0,
+      color: '#0f5132',
+      cursor: 'pointer',
+      fontWeight: 800,
+      letterSpacing: '-0.03em',
+      fontSize: '1.05rem',
+    },
+    nav: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '22px',
+      flexWrap: 'wrap',
+    },
+    navLink: {
+      background: 'transparent',
+      border: 'none',
+      padding: 0,
+      color: '#334155',
+      fontSize: '0.95rem',
+      cursor: 'pointer',
+      fontWeight: 500,
+    },
+    accountBtn: {
+      width: '36px',
+      height: '36px',
+      borderRadius: '999px',
+      background: '#dcebe1',
+      border: 'none',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#0f5132',
+      cursor: 'pointer',
+    },
+    dropdown: {
+      position: 'absolute',
+      right: 0,
+      top: '44px',
+      background: '#fff',
+      borderRadius: '14px',
+      boxShadow: '0 18px 40px rgba(15,23,42,0.12)',
+      minWidth: '160px',
+      overflow: 'hidden',
+      border: '1px solid rgba(148,163,184,0.15)',
+    },
+    main: {
+      maxWidth: '1200px',
+      width: '100%',
+      margin: '0 auto',
+      padding: '20px 24px 22px',
+      boxSizing: 'border-box',
+      minHeight: 0,
+      overflow: 'hidden',
+      display: 'grid',
+      gap: '18px',
+    },
+    hero: {
+      borderRadius: '24px',
+      overflow: 'hidden',
+      position: 'relative',
+      minHeight: '170px',
+      background: 'linear-gradient(135deg, #0b5135 0%, #08452d 100%)',
+      boxShadow: '0 18px 40px rgba(15,81,50,0.16)',
+    },
+    heroImage: {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      opacity: 0.24,
+    },
+    heroOverlay: {
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(180deg, rgba(8,45,30,0.18) 0%, rgba(8,45,30,0.78) 100%)',
+    },
+    heroText: {
+      position: 'relative',
+      zIndex: 2,
+      padding: '22px 24px',
+      color: '#fff',
+      maxWidth: '760px',
+    },
+    kicker: {
+      fontSize: '0.68rem',
+      letterSpacing: '0.22em',
+      textTransform: 'uppercase',
+      opacity: 0.75,
+      fontWeight: 800,
+      marginBottom: '10px',
+    },
+    title: {
+      margin: 0,
+      fontSize: 'clamp(1.9rem, 3vw, 3rem)',
+      letterSpacing: '-0.05em',
+    },
+    subtitle: {
+      marginTop: '8px',
+      fontSize: '0.96rem',
+      lineHeight: 1.6,
+      color: 'rgba(255,255,255,0.84)',
+      maxWidth: '60ch',
+    },
+    grid: {
+      display: 'grid',
+      gridTemplateColumns: 'minmax(0, 1.15fr) minmax(320px, 0.85fr)',
+      gap: '16px',
+      minHeight: 0,
+      overflow: 'hidden',
+    },
+    card: {
+      background: '#fff',
+      borderRadius: '22px',
+      border: '1px solid rgba(148,163,184,0.14)',
+      boxShadow: '0 18px 34px rgba(15,23,42,0.06)',
+    },
+    formCard: {
+      padding: '18px',
+      display: 'grid',
+      gap: '12px',
+      minHeight: 0,
+    },
+    labelBlock: {
+      fontSize: '0.68rem',
+      fontWeight: 800,
+      letterSpacing: '0.22em',
+      textTransform: 'uppercase',
+      color: '#0f5132',
+      marginBottom: '6px',
+    },
+    sectionTitle: {
+      margin: 0,
+      fontSize: '1.25rem',
+      letterSpacing: '-0.04em',
+    },
+    sectionText: {
+      margin: '8px 0 0',
+      color: '#475569',
+      lineHeight: 1.5,
+      fontSize: '0.92rem',
+    },
+    formGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+      gap: '12px',
+    },
+    formGroup: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '6px',
+    },
+    fullWidth: {
+      gridColumn: '1 / -1',
+    },
+    label: {
+      fontSize: '0.82rem',
+      fontWeight: 700,
+      color: '#334155',
+    },
+    input: {
+      width: '100%',
+      borderRadius: '14px',
+      border: '1px solid rgba(148,163,184,0.2)',
+      padding: '12px 14px',
+      fontSize: '0.95rem',
+      outline: 'none',
+      background: '#fff',
+      color: '#0f172a',
+      boxSizing: 'border-box',
+    },
+    inputDisabled: {
+      width: '100%',
+      borderRadius: '14px',
+      border: '1px solid rgba(148,163,184,0.12)',
+      padding: '12px 14px',
+      fontSize: '0.95rem',
+      background: '#f8fafc',
+      color: '#64748b',
+      boxSizing: 'border-box',
+    },
+    rightCard: {
+      padding: '18px',
+      display: 'grid',
+      gap: '12px',
+      minHeight: 0,
+      overflow: 'hidden',
+    },
+    quickStats: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+      gap: '10px',
+    },
+    statBox: {
+      background: '#f8fafc',
+      borderRadius: '16px',
+      padding: '12px',
+      border: '1px solid rgba(148,163,184,0.12)',
+    },
+    statLabel: {
+      fontSize: '0.7rem',
+      color: '#64748b',
+      textTransform: 'uppercase',
+      letterSpacing: '0.16em',
+      marginBottom: '6px',
+    },
+    statValue: {
+      fontSize: '0.96rem',
+      fontWeight: 800,
+      color: '#0f172a',
+    },
+    toggleList: {
+      display: 'grid',
+      gap: '10px',
+    },
+    toggleRow: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '12px',
+      padding: '10px 0',
+      borderTop: '1px solid rgba(148,163,184,0.12)',
+    },
+    toggleLabel: {
+      fontWeight: 700,
+      color: '#0f172a',
+      fontSize: '0.92rem',
+    },
+    toggleSub: {
+      fontSize: '0.82rem',
+      color: '#64748b',
+      marginTop: '2px',
+    },
+    switch: {
+      width: '48px',
+      height: '28px',
+      borderRadius: '999px',
+      background: '#e2e8f0',
+      position: 'relative',
+      cursor: 'pointer',
+      border: 'none',
+      padding: 0,
+      flexShrink: 0,
+    },
+    switchOn: {
+      background: 'linear-gradient(135deg, #0f5132 0%, #0b6b45 100%)',
+    },
+    knob: {
+      width: '22px',
+      height: '22px',
+      borderRadius: '999px',
+      background: '#fff',
+      position: 'absolute',
+      top: '3px',
+      left: '3px',
+      transition: 'transform 0.2s ease',
+      boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
+    },
+    knobOn: {
+      transform: 'translateX(20px)',
+    },
+    buttonRow: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      gap: '12px',
+      flexWrap: 'wrap',
+    },
+    secondaryButton: {
+      borderRadius: '14px',
+      border: '1px solid rgba(148,163,184,0.22)',
+      background: '#fff',
+      color: '#0f172a',
+      padding: '12px 16px',
+      fontWeight: 800,
+      cursor: 'pointer',
+    },
+    primaryButton: {
+      borderRadius: '14px',
+      border: 'none',
+      background: 'linear-gradient(135deg, #0f5132 0%, #0b6b45 100%)',
+      color: '#fff',
+      padding: '12px 16px',
+      fontWeight: 800,
+      cursor: 'pointer',
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '10px',
+      boxShadow: '0 12px 28px rgba(15,81,50,0.22)',
+    },
+    message: {
+      padding: '12px 14px',
+      borderRadius: '14px',
+      fontSize: '0.94rem',
+      lineHeight: 1.5,
+      background: '#ecfdf5',
+      color: '#065f46',
+      border: '1px solid #bbf7d0',
+    },
+  };
+
+  if (loading) {
+    return (
+      <div style={{ height: '100vh', display: 'grid', placeItems: 'center', background: '#f4f8f2', color: '#0f5132', fontWeight: 700 }}>
+        Loading profile...
+      </div>
+    );
+  }
 
   return (
-    <div style={{ ...styles.page, opacity: loading ? 0 : 1, transition: 'opacity 0.6s cubic-bezier(.4,0,.2,1)' }}>
-      <style>{`
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-        * { scrollbar-width: none; -ms-overflow-style: none; }
-      `}</style>
+    <div style={styles.page}>
       <header style={styles.header}>
-        <div style={{ ...styles.logo, cursor: 'pointer' }} onClick={() => navigate('/home')} role="button" tabIndex={0} aria-label="Go to homepage">
-          <span style={styles.logoIcon}>
-            <Leaf size={20} color="#10b981" />
-          </span>
-          <span style={styles.logoText}>FASALGUARD</span>
+        <div style={styles.headerInner}>
+          <button type="button" style={styles.brand} onClick={() => navigate('/home')}>
+            <Leaf size={22} />
+            <span>FasalGuard</span>
+          </button>
+          <nav style={styles.nav}>
+            <button type="button" style={styles.navLink} onClick={() => navigate('/about')}>About Us</button>
+            <button type="button" style={styles.navLink} onClick={() => navigate('/services')}>Services</button>
+            <button type="button" style={styles.navLink} onClick={() => navigate('/contact')}>Contact Us</button>
+            <div style={{ position: 'relative' }}>
+              <button type="button" className="profileIcon" style={styles.accountBtn} onClick={() => setShowDropdown((prev) => !prev)} aria-label="Account">
+                <ShieldCheck size={18} />
+              </button>
+              {showDropdown && (
+                <div style={styles.dropdown}>
+                  <button type="button" onClick={() => { setShowDropdown(false); navigate('/profile'); }} style={{ width: '100%', border: 'none', background: 'transparent', padding: '12px 14px', textAlign: 'left', cursor: 'pointer' }}>Account</button>
+                  <button type="button" onClick={handleLogout} style={{ width: '100%', border: 'none', background: 'transparent', padding: '12px 14px', textAlign: 'left', cursor: 'pointer' }}>Logout</button>
+                </div>
+              )}
+            </div>
+          </nav>
         </div>
-        <nav style={styles.nav}>
-          <button style={styles.navLink} type="button" onClick={() => navigate('/about')}>About Us</button>
-          <a
-            style={styles.navLink}
-            onClick={e => {
-              e.preventDefault();
-              document.body.style.scrollBehavior = 'auto';
-              navigate('/contact');
-              setTimeout(() => {
-                document.body.style.scrollBehavior = 'smooth';
-              }, 500);
-            }}
-            href="/contact"
-          >Contact Us</a>
-          <div style={{ position: 'relative', marginLeft: '1.5rem' }}>
-            <span
-              style={{ color: '#fff', fontSize: '1.5rem', cursor: 'pointer', transition: 'color 0.3s' }}
-              onClick={() => setShowDropdown((prev) => !prev)}
-              title="Profile"
-              className="profileIcon"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/><path stroke="currentColor" strokeWidth="2" d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"/></svg>
-            </span>
-            {showDropdown && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 8px)',
-                  right: 0,
-                  background: '#222',
-                  color: '#fff',
-                  borderRadius: '10px',
-                  boxShadow: '0 4px 24px rgba(16,185,129,0.18)',
-                  minWidth: '140px',
-                  zIndex: 999,
-                  padding: '0.5rem 0',
-                  fontSize: '1rem',
-                  border: '1px solid #059669',
-                  animation: 'fadeIn 0.2s',
-                }}
-                tabIndex={-1}
-              >
-                <button
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#fff',
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '0.75rem 1.5rem',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    transition: 'background 0.2s',
-                  }}
-                  onClick={() => { setShowDropdown(false); handleAccountClick(); }}
-                  onMouseDown={e => e.preventDefault()}
-                >Account</button>
-                <button
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#fff',
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '0.75rem 1.5rem',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    transition: 'background 0.2s',
-                  }}
-                  onClick={() => {
-                    setShowDropdown(false);
-                    localStorage.removeItem('token');
-                    window.location.replace('/login');
-                  }}
-                  onMouseDown={e => e.preventDefault()}
-                >Logout</button>
-              </div>
-            )}
-          </div>
-        </nav>
       </header>
 
-      <div style={styles.container}>
-        <div style={styles.pageHeader}>
-          <h1 style={styles.pageTitle}>Profile & Settings</h1>
-          <p style={styles.pageSubtitle}>Manage your account information and password</p>
-        </div>
-        <div style={styles.contentGrid}>
-          <div style={styles.sidebar}>
-            <div style={styles.profileCard}>
-              <div style={styles.profileCardGlow}></div>
-              <div style={styles.avatarWrapper}>
-                <div style={styles.avatar}>{name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : ''}</div>
-                <button style={styles.cameraButton} className="cameraButton">
-                  <Camera size={20} color="#fff" />
-                </button>
-              </div>
-              <div style={styles.userName}>{name}</div>
-              <div style={styles.userEmail}>{user?.email || ''}</div>
-            </div>
+      <main style={styles.main}>
+        <section style={styles.hero}>
+          <img src="/account_bg.png" alt="FasalGuard farm dashboard" style={styles.heroImage} />
+          <div style={styles.heroOverlay} />
+          <div style={styles.heroText}>
+            <div style={styles.kicker}>Account Overview</div>
+            <h1 style={styles.title}>{name || 'FasalGuard Farmer'}</h1>
+            <p style={styles.subtitle}>A compact farm-focused account page for managing your profile, password, and alerts without adding extra clutter.</p>
           </div>
-          <div style={styles.mainContent}>
-            <div style={styles.contentGlow}></div>
+        </section>
+
+        <section style={styles.grid}>
+          <div style={{ ...styles.card, ...styles.formCard }}>
+            <div>
+              <div style={styles.labelBlock}>Profile Details</div>
+              <h2 style={styles.sectionTitle}>Update identity</h2>
+              <p style={styles.sectionText}>Keep your account current. Backend validation remains unchanged.</p>
+            </div>
+
             <div style={styles.formGrid}>
-              <div style={styles.formGroupFull}>
-                <label style={styles.label}><User size={14} /> Name</label>
-                <input type="text" value={name} style={styles.input} onChange={e => setName(e.target.value)} />
+              <div style={{ ...styles.formGroup, ...styles.fullWidth }}>
+                <label style={styles.label}><User size={14} /> Full Name</label>
+                <input type="text" value={name} style={styles.input} onChange={(event) => setName(event.target.value)} />
               </div>
-              <div style={styles.formGroupFull}>
-                <label style={styles.label}><Lock size={14} /> Email</label>
+              <div style={{ ...styles.formGroup, ...styles.fullWidth }}>
+                <label style={styles.label}><Lock size={14} /> Email Address</label>
                 <input type="email" value={user?.email || ''} style={styles.inputDisabled} disabled />
               </div>
-              {/* Only show password fields for users without googleId and provider google */}
-              {user && !user.googleId && user?.provider !== 'google' && user?.provider !== 'Google' && (
+
+              {user && user?.provider !== 'google' && (
                 <>
-                  <div style={styles.formGroupFull}>
+                  <div style={{ ...styles.formGroup, ...styles.fullWidth }}>
                     <label style={styles.label}><Lock size={14} /> Current Password</label>
-                    <input type="password" value={currentPassword} style={styles.input} onChange={e => setCurrentPassword(e.target.value)} />
+                    <input type="password" value={currentPassword} style={styles.input} onChange={(event) => setCurrentPassword(event.target.value)} />
                   </div>
-                  <div style={styles.formGroupFull}>
+                  <div style={{ ...styles.formGroup, ...styles.fullWidth }}>
                     <label style={styles.label}><Lock size={14} /> New Password</label>
-                    <div style={styles.inputWrapper}>
-                      <input
-                        type={showNewPassword ? 'text' : 'password'}
-                        value={newPassword}
-                        style={styles.input}
-                        onChange={e => setNewPassword(e.target.value)}
-                      />
-                      <span
-                        style={styles.inputIcon}
-                        onClick={() => setShowNewPassword((prev) => !prev)}
-                        title={showNewPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showNewPassword ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="#059669" strokeWidth="2" d="M3 3l18 18M10.7 6.7A7.97 7.97 0 0 1 12 6c5 0 9 4 9 6s-2.1 4.6-5.2 5.7M6.7 10.7C5.6 11.4 4 13 4 14c0 2 4 6 8 6s8-4 8-6c0-1.1-1.6-2.6-2.7-3.3"/></svg>
-                        ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="#059669" strokeWidth="2" d="M1 12s4-6 11-6 11 6 11 6-4 6-11 6S1 12 1 12zm11-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
-                        )}
-                      </span>
-                    </div>
+                    <input type="password" value={newPassword} style={styles.input} onChange={(event) => setNewPassword(event.target.value)} />
                   </div>
-                  <div style={styles.formGroupFull}>
+                  <div style={{ ...styles.formGroup, ...styles.fullWidth }}>
                     <label style={styles.label}><Lock size={14} /> Confirm New Password</label>
-                    <div style={styles.inputWrapper}>
-                      <input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={confirmPassword}
-                        style={styles.input}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                      />
-                      <span
-                        style={styles.inputIcon}
-                        onClick={() => setShowConfirmPassword((prev) => !prev)}
-                        title={showConfirmPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showConfirmPassword ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="#059669" strokeWidth="2" d="M3 3l18 18M10.7 6.7A7.97 7.97 0 0 1 12 6c5 0 9 4 9 6s-2.1 4.6-5.2 5.7M6.7 10.7C5.6 11.4 4 13 4 14c0 2 4 6 8 6s8-4 8-6c0-1.1-1.6-2.6-2.7-3.3"/></svg>
-                        ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"><path stroke="#059669" strokeWidth="2" d="M1 12s4-6 11-6 11 6 11 6-4 6-11 6S1 12 1 12zm11-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
-                        )}
-                      </span>
-                    </div>
+                    <input type="password" value={confirmPassword} style={styles.input} onChange={(event) => setConfirmPassword(event.target.value)} />
                   </div>
                 </>
               )}
             </div>
-            <div style={styles.buttonGroup}>
-              <button style={styles.btnPrimary} className="btnPrimary" onClick={handleSave}>
-                <Save size={18} /> Save
+          </div>
+
+          <div style={{ ...styles.card, ...styles.rightCard }}>
+            <div>
+              <div style={styles.labelBlock}>Farm Focus</div>
+              <h2 style={styles.sectionTitle}>Quick status</h2>
+              <p style={styles.sectionText}>A simple view of the account state and alert preferences.</p>
+            </div>
+
+            <div style={styles.quickStats}>
+              <div style={styles.statBox}>
+                <div style={styles.statLabel}>Account</div>
+                <div style={styles.statValue}>{user?.provider || 'Local'}</div>
+              </div>
+              <div style={styles.statBox}>
+                <div style={styles.statLabel}>Status</div>
+                <div style={styles.statValue}>Active</div>
+              </div>
+              <div style={styles.statBox}>
+                <div style={styles.statLabel}>Focus</div>
+                <div style={styles.statValue}>Agri-first</div>
+              </div>
+            </div>
+
+            <div style={styles.toggleList}>
+              <div style={styles.toggleRow}>
+                <div>
+                  <div style={styles.toggleLabel}>Satellite Updates</div>
+                  <div style={styles.toggleSub}>Real-time alerts for new imagery.</div>
+                </div>
+                <button type="button" style={{ ...styles.switch, ...(alerts.satellite ? styles.switchOn : {}) }} onClick={() => setAlerts((prev) => ({ ...prev, satellite: !prev.satellite }))}>
+                  <span style={{ ...styles.knob, ...(alerts.satellite ? styles.knobOn : {}) }} />
+                </button>
+              </div>
+              <div style={styles.toggleRow}>
+                <div>
+                  <div style={styles.toggleLabel}>Anomaly Detection</div>
+                  <div style={styles.toggleSub}>Alerts for crop stress or pests.</div>
+                </div>
+                <button type="button" style={{ ...styles.switch, ...(alerts.anomaly ? styles.switchOn : {}) }} onClick={() => setAlerts((prev) => ({ ...prev, anomaly: !prev.anomaly }))}>
+                  <span style={{ ...styles.knob, ...(alerts.anomaly ? styles.knobOn : {}) }} />
+                </button>
+              </div>
+              <div style={styles.toggleRow}>
+                <div>
+                  <div style={styles.toggleLabel}>Weather Reports</div>
+                  <div style={styles.toggleSub}>Daily localized weather summary.</div>
+                </div>
+                <button type="button" style={{ ...styles.switch, ...(alerts.weather ? styles.switchOn : {}) }} onClick={() => setAlerts((prev) => ({ ...prev, weather: !prev.weather }))}>
+                  <span style={{ ...styles.knob, ...(alerts.weather ? styles.knobOn : {}) }} />
+                </button>
+              </div>
+            </div>
+
+            <div style={styles.buttonRow}>
+              <button type="button" style={styles.secondaryButton} onClick={() => navigate('/contact')}>Contact Support</button>
+              <button type="button" style={styles.secondaryButton} onClick={() => navigate('/satellite-analysis')}>Open Satellite</button>
+              <button type="button" style={styles.primaryButton} onClick={handleSave}>
+                <Save size={18} /> Save Profile
               </button>
             </div>
-            {saveMsg && <div style={{ color: '#10b981', marginTop: '1rem', fontWeight: 500 }}>{saveMsg}</div>}
+
+            {saveMsg && <div style={styles.message}>{saveMsg}</div>}
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

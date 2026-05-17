@@ -7,6 +7,7 @@ import { EditControl } from 'react-leaflet-draw';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
+import { Leaf } from 'lucide-react';
 import './SatelliteAnalysis.css';
 import { useLanguage } from './context/LanguageContext';
 import CompactWeatherInfo from './components/CompactWeatherInfo';
@@ -6453,6 +6454,42 @@ const SatelliteAnalysis = () => {
                 <div className="sat-local-context-item">
                   <span className="sat-local-context-kicker">{tr('Practical Use', 'عملی استعمال')}</span>
                   <span className="sat-local-context-value">{tr('Field-wise action timing for irrigation and crop stress', 'آبپاشی اور فصل اسٹریس کے لیے کھیت وار ایکشن ٹائمنگ')}</span>
+                </div>
+              </div>
+            </div>
+            <div className="sat-hero-banner" aria-label={tr('Satellite monitoring overview', 'سیٹلائٹ نگرانی کا جائزہ')}>
+              <div className="sat-hero-banner-inner">
+                <div className="sat-hero-copy">
+                  <div className="sat-hero-kicker">
+                    <Leaf size={14} />
+                    {tr('Live crop monitoring', 'لائیو فصل نگرانی')}
+                  </div>
+                  <h2 className="sat-hero-heading">
+                    {tr('See crop stress, field shape, and growth signals in one clean view.', 'فصل کا اسٹریس، کھیت کی شکل، اور بڑھوتری کے اشارے ایک صاف نظر میں دیکھیں۔')}
+                  </h2>
+                  <p className="sat-hero-text">
+                    {tr('This page keeps the backend unchanged while giving the analysis area a greener, calmer visual system with real farm imagery.', 'یہ صفحہ بیک اینڈ کو بدلے بغیر تجزیہ حصے کو زیادہ سبز، پرسکون اور اصل زرعی تصویروں کے ساتھ پیش کرتا ہے۔')}
+                  </p>
+                  <div className="sat-hero-pills">
+                    <span className="sat-hero-pill">{tr('Sentinel-2', 'سینٹینل-2')}</span>
+                    <span className="sat-hero-pill">{tr('NDVI / EVI / NDWI', 'این ڈی وی آئی / ای وی آئی / این ڈی ڈبلیو آئی')}</span>
+                    <span className="sat-hero-pill">{tr('Field guidance', 'فیلڈ رہنمائی')}</span>
+                  </div>
+                </div>
+                <div className="sat-hero-visual">
+                  <div className="sat-hero-image-card tall">
+                    <img className="sat-hero-image" src="/satellite_bg.png" alt={tr('Healthy crop field', 'صحت مند فصل کا کھیت')} />
+                    <div className="sat-hero-image-overlay" />
+                    <div className="sat-hero-image-caption">{tr('Healthy crop canopy and moisture-aware monitoring', 'صحت مند فصل اور نمی کے مطابق نگرانی')}</div>
+                  </div>
+                  <div className="sat-hero-image-card">
+                    <img className="sat-hero-image" src="/sat_wheat.png" alt={tr('Wheat crop', 'گندم کی فصل')} />
+                    <div className="sat-hero-image-overlay" />
+                  </div>
+                  <div className="sat-hero-image-card">
+                    <img className="sat-hero-image" src="/sat_rice.png" alt={tr('Rice crop', 'چاول کی فصل')} />
+                    <div className="sat-hero-image-overlay" />
+                  </div>
                 </div>
               </div>
             </div>

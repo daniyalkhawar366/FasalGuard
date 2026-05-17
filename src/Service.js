@@ -1,954 +1,711 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Leaf, ChevronDown, BarChart, Cloud, Thermometer, Droplets, Map, Bell, TrendingUp, ArrowRight, CheckCircle, Globe, Cpu, Database, Smartphone, Zap, Users, Target, Shield, Award, Clock, PieChart, Calendar, Droplet, Wind, Sun } from 'lucide-react';
-import { servicesData, serviceStats, processSteps } from './ServicesData';
+import { ArrowRight, Leaf, ShieldCheck, SunMedium, Droplets, Satellite, BarChart3 } from 'lucide-react';
+
+const serviceCards = [
+  {
+    id: 1,
+    title: 'Crop Health Monitoring',
+    description:
+      'Using high-resolution satellite indicators and vegetation signals to detect crop stress, nutrient gaps, and early pest pressure before it spreads.',
+    bullets: ['Daily field visibility', 'Early stress detection', 'Satellite-driven alerts'],
+    actionLabel: 'Explore Capability',
+    actionRoute: '/satellite-analysis',
+    icon: <Satellite size={26} />,
+    variant: 'feature',
+    image: '/service_satellite.png',
+  },
+  {
+    id: 2,
+    title: 'Soil Moisture Analysis',
+    description:
+      'Track soil moisture and field conditions to guide irrigation timing, reduce water waste, and keep crops stable through hot periods.',
+    bullets: ['Water-use guidance', 'Moisture insights', 'Irrigation planning'],
+    actionLabel: 'Open Soil Analysis',
+    actionRoute: '/soil-analysis',
+    icon: <Droplets size={26} />,
+    variant: 'card',
+    image: '/service_soil.png',
+  },
+  {
+    id: 3,
+    title: 'Weather Intelligence',
+    description:
+      'Get weather-aware farming guidance with forecast-driven alerts for heat, rain, and wind so field operations are timed better.',
+    bullets: ['7-day forecasts', 'Risk alerts', 'Farm planning support'],
+    actionLabel: 'View Weather Tools',
+    actionRoute: '/crop-prediction',
+    icon: <SunMedium size={26} />,
+    variant: 'card',
+    image: '/service_weather.png',
+  },
+  {
+    id: 4,
+    title: 'Yield Prediction',
+    description:
+      'Use FasalGuard forecasting to estimate outcomes from crop health, weather, and historical patterns for better farm decisions.',
+    bullets: ['Yield outlook', 'Decision support', 'Harvest planning'],
+    actionLabel: 'View Sample Report',
+    actionRoute: '/prediction-results/report',
+    icon: <BarChart3 size={26} />,
+    variant: 'highlight',
+    image: '/service_yield.png',
+  },
+];
+
+const stats = [
+  { value: '4', label: 'Core FasalGuard Services' },
+  { value: '24/7', label: 'Monitoring and Alerts' },
+  { value: '1', label: 'Unified Platform' },
+];
 
 const Services = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(1);
-  const [scrolled, setScrolled] = useState(false);
-  const [visibleServices, setVisibleServices] = useState([]);
-  const [openFaq, setOpenFaq] = useState(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 100);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const serviceId = parseInt(entry.target.dataset.serviceId);
-            setVisibleServices(prev => [...new Set([...prev, serviceId])]);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '50px' }
-    );
-
-    document.querySelectorAll('.service-card').forEach(card => {
-      observer.observe(card);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const resolveServiceRoute = (title) => {
-    const key = String(title || '').toLowerCase();
-    if (key.includes('weather') || key.includes('climate')) return '/crop-prediction';
-    if (key.includes('soil')) return '/soil-analysis';
-    if (key.includes('heatmap')) return '/satellite-analysis';
-    if (key.includes('satellite')) return '/satellite-analysis';
-    if (key.includes('past')) return '/past-trends';
-    return '/services';
-  };
 
   const styles = {
     page: {
       minHeight: '100vh',
-      fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-      color: '#222',
-      padding: 0,
-      margin: 0,
-      position: 'relative',
-      overflowX: 'hidden',
-      background: '#fff',
+      background: '#f7f8fb',
+      color: '#0f172a',
+      fontFamily: 'Inter, Arial, sans-serif',
     },
     header: {
-      position: 'fixed',
+      position: 'sticky',
       top: 0,
-      left: 0,
-      right: 0,
-      padding: scrolled ? '1rem 3rem' : '1.5rem 3rem',
-      zIndex: 1000,
+      zIndex: 30,
+      background: 'rgba(247, 248, 251, 0.92)',
+      backdropFilter: 'blur(14px)',
+      borderBottom: '1px solid rgba(148, 163, 184, 0.18)',
+    },
+    headerInner: {
+      maxWidth: '1180px',
+      margin: '0 auto',
+      padding: '18px 24px',
       display: 'flex',
+      alignItems: 'center',
       justifyContent: 'space-between',
-      alignItems: 'center',
-      background: scrolled ? 'rgba(255,255,255,0.98)' : 'rgba(255,255,255,0.95)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(16,185,129,0.1)',
-      transition: 'all 0.3s ease',
+      gap: '16px',
     },
-    logoSection: {
+    brand: {
       display: 'flex',
       alignItems: 'center',
-      gap: '1rem',
-      cursor: 'pointer',
-    },
-    logo: {
-      border: '2px solid #10b981',
-      borderRadius: '50%',
-      padding: '0.5rem',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    brandText: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    title: {
-      fontSize: '1.2rem',
-      fontWeight: 400,
-      color: '#059669',
-      margin: 0,
-      letterSpacing: '4px',
-    },
-    subtitle: {
-      fontSize: '0.55rem',
-      color: '#059669',
-      margin: 0,
-      fontWeight: 300,
-      letterSpacing: '4px',
-      textTransform: 'uppercase',
+      gap: '10px',
+      fontWeight: 800,
+      letterSpacing: '-0.03em',
+      fontSize: '1.1rem',
+      color: '#0f3d2e',
     },
     nav: {
       display: 'flex',
-      gap: '2.5rem',
+      gap: '26px',
       alignItems: 'center',
+      flexWrap: 'wrap',
+      justifyContent: 'flex-end',
     },
     navLink: {
-      color: '#374151',
-      fontSize: '0.7rem',
-      fontWeight: 400,
-      textDecoration: 'none',
-      letterSpacing: '2px',
-      textTransform: 'uppercase',
-      transition: 'color 0.3s',
-      cursor: 'pointer',
       background: 'transparent',
       border: 'none',
-      outline: 'none',
       padding: 0,
+      color: '#334155',
+      fontSize: '0.95rem',
+      cursor: 'pointer',
+      fontWeight: 500,
     },
-    
-    // Hero Section
-    heroSection: {
-      background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
-      minHeight: '100vh',
-      display: 'flex',
+    accountBtn: {
+      width: '36px',
+      height: '36px',
+      borderRadius: '999px',
+      background: '#dbe7df',
+      border: 'none',
+      display: 'inline-flex',
       alignItems: 'center',
-      padding: '8rem 3rem 4rem',
-      position: 'relative',
-      overflow: 'hidden',
+      justifyContent: 'center',
+      color: '#345b4a',
+      cursor: 'pointer',
     },
-    heroContainer: {
-      maxWidth: '1400px',
+    hero: {
+      maxWidth: '1180px',
       margin: '0 auto',
-      width: '100%',
-      textAlign: 'center',
-      position: 'relative',
-      zIndex: 2,
+      padding: '56px 24px 28px',
     },
-    heroLabel: {
-      fontSize: '0.9rem',
-      fontWeight: 400,
-      color: '#10b981',
-      letterSpacing: '4px',
+    heroGrid: {
+      display: 'grid',
+      gridTemplateColumns: '1.2fr 0.8fr',
+      gap: '20px',
+      alignItems: 'stretch',
+      marginTop: '8px',
+    },
+    heroVisual: {
+      borderRadius: '26px',
+      overflow: 'hidden',
+      minHeight: '340px',
+      position: 'relative',
+      background: 'linear-gradient(135deg, #0f5132 0%, #123826 100%)',
+      boxShadow: '0 22px 55px rgba(15, 83, 50, 0.22)',
+    },
+    heroVisualImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block',
+      opacity: 0.92,
+      filter: 'saturate(1.05) contrast(1.02)',
+    },
+    heroVisualOverlay: {
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(180deg, rgba(7, 20, 14, 0.08) 0%, rgba(7, 20, 14, 0.54) 100%)',
+    },
+    heroVisualCaption: {
+      position: 'absolute',
+      left: '18px',
+      right: '18px',
+      bottom: '18px',
+      color: '#f8fafc',
+      display: 'flex',
+      justifyContent: 'space-between',
+      gap: '12px',
+      alignItems: 'end',
+      flexWrap: 'wrap',
+    },
+    heroVisualCaptionText: {
+      maxWidth: '280px',
+      fontSize: '0.95rem',
+      lineHeight: 1.6,
+      color: 'rgba(248, 250, 252, 0.9)',
+    },
+    heroPills: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, minmax(110px, 1fr))',
+      gap: '10px',
+      width: '240px',
+    },
+    heroPill: {
+      background: 'rgba(255,255,255,0.14)',
+      border: '1px solid rgba(255,255,255,0.16)',
+      color: '#fff',
+      borderRadius: '14px',
+      padding: '10px 12px',
+      backdropFilter: 'blur(10px)',
+    },
+    heroPillLabel: {
+      fontSize: '0.72rem',
       textTransform: 'uppercase',
-      marginBottom: '1.5rem',
+      letterSpacing: '0.16em',
+      opacity: 0.7,
+    },
+    heroPillValue: {
+      fontSize: '0.92rem',
+      fontWeight: 800,
+      marginTop: '4px',
+    },
+    heroGallery: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '16px',
+      minHeight: '340px',
+    },
+    galleryTile: {
+      borderRadius: '22px',
+      overflow: 'hidden',
+      position: 'relative',
+      boxShadow: '0 18px 40px rgba(15, 23, 42, 0.08)',
+      background: '#fff',
+    },
+    galleryTileTall: {
+      gridRow: 'span 2',
+      minHeight: '340px',
+    },
+    galleryTileImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
       display: 'block',
     },
-    heroTitle: {
-      fontSize: '4.5rem',
-      fontWeight: 300,
-      color: '#111',
-      lineHeight: '1.1',
-      marginBottom: '2rem',
-      maxWidth: '900px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
+    galleryOverlay: {
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(180deg, rgba(7, 20, 14, 0) 20%, rgba(7, 20, 14, 0.44) 100%)',
     },
-    heroSubtitle: {
-      fontSize: '1.3rem',
-      color: '#374151',
-      lineHeight: '1.6',
-      fontWeight: 300,
-      marginBottom: '3rem',
-      maxWidth: '700px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-    
-    // Stats Section
-    statsSection: {
-      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-      padding: '6rem 2rem',
+    galleryText: {
+      position: 'absolute',
+      left: '14px',
+      right: '14px',
+      bottom: '14px',
       color: '#fff',
+      fontSize: '0.88rem',
+      fontWeight: 700,
+      lineHeight: 1.5,
     },
-    statsContainer: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      width: '100%',
+    eyebrow: {
+      color: '#0f5132',
+      fontSize: '0.72rem',
+      letterSpacing: '0.22em',
+      fontWeight: 800,
+      marginBottom: '14px',
+      textTransform: 'uppercase',
     },
-    statsGrid: {
+    title: {
+      fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+      lineHeight: 1.03,
+      margin: 0,
+      maxWidth: '920px',
+      letterSpacing: '-0.05em',
+    },
+    subtitle: {
+      maxWidth: '740px',
+      marginTop: '18px',
+      fontSize: '1.08rem',
+      lineHeight: 1.75,
+      color: '#475569',
+    },
+    statsRow: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '3rem',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+      gap: '16px',
+      marginTop: '30px',
     },
     statCard: {
-      textAlign: 'center',
-      padding: '2rem',
+      background: '#fff',
+      borderRadius: '18px',
+      border: '1px solid rgba(148, 163, 184, 0.18)',
+      padding: '18px 20px',
+      boxShadow: '0 18px 40px rgba(15, 23, 42, 0.05)',
     },
-    statIcon: {
-      fontSize: '2.5rem',
-      marginBottom: '1rem',
-    },
-    statNumber: {
-      fontSize: '3.5rem',
-      fontWeight: 300,
-      color: '#fff',
-      marginBottom: '0.5rem',
-      lineHeight: 1,
+    statValue: {
+      fontSize: '2rem',
+      fontWeight: 800,
+      color: '#0f3d2e',
+      marginBottom: '4px',
     },
     statLabel: {
-      fontSize: '1.1rem',
-      color: 'rgba(255,255,255,0.9)',
-      textTransform: 'uppercase',
-      letterSpacing: '2px',
+      fontSize: '0.9rem',
+      color: '#64748b',
     },
-    
-    // Services Section
-    servicesSection: {
-      padding: '8rem 2rem',
-      background: '#fff',
-    },
-    servicesContainer: {
-      maxWidth: '1400px',
+    content: {
+      maxWidth: '1180px',
       margin: '0 auto',
-      width: '100%',
+      padding: '18px 24px 72px',
     },
-    servicesHeader: {
-      textAlign: 'center',
-      marginBottom: '5rem',
-    },
-    sectionTitle: {
-      fontSize: '3.5rem',
-      fontWeight: 300,
-      color: '#111',
-      marginBottom: '1.5rem',
-      lineHeight: '1.2',
-    },
-    sectionSubtitle: {
-      fontSize: '1.2rem',
-      color: '#6b7280',
-      maxWidth: '700px',
-      margin: '0 auto',
-      lineHeight: '1.6',
-    },
-    
-    // Service Tabs
-    serviceTabs: {
-      display: 'flex',
-      justifyContent: 'center',
-      gap: '1rem',
-      marginBottom: '4rem',
-      flexWrap: 'wrap',
-    },
-    tab: {
-      padding: '1rem 2rem',
-      background: '#f9fafb',
-      border: 'none',
-      borderRadius: '50px',
-      fontSize: '1rem',
-      fontWeight: 500,
-      color: '#6b7280',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem',
-    },
-    activeTab: {
-      background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
-      color: '#fff',
-      boxShadow: '0 4px 20px rgba(16,185,129,0.3)',
-    },
-    
-    // Service Grid
-    serviceGrid: {
+    grid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-      gap: '3rem',
-      marginBottom: '6rem',
+      gridTemplateColumns: 'repeat(12, 1fr)',
+      gap: '18px',
+      marginTop: '10px',
     },
-    serviceCard: {
+    card: {
       background: '#fff',
-      borderRadius: '1.5rem',
-      overflow: 'hidden',
-      boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
-      border: '1px solid rgba(16,185,129,0.1)',
-      transition: 'all 0.5s ease',
-      opacity: 0,
-      transform: 'translateY(30px)',
-    },
-    serviceImage: {
-      width: '100%',
-      height: '250px',
-      objectFit: 'cover',
-      transition: 'transform 0.5s ease',
-    },
-    serviceContent: {
-      padding: '2.5rem',
-    },
-    serviceIcon: {
-      fontSize: '2.5rem',
-      marginBottom: '1.5rem',
-    },
-    serviceTitle: {
-      fontSize: '1.8rem',
-      fontWeight: 600,
-      color: '#111',
-      marginBottom: '0.5rem',
-    },
-    serviceSubtitle: {
-      fontSize: '1rem',
-      color: '#10b981',
-      marginBottom: '1rem',
-      fontWeight: 500,
-    },
-    serviceDescription: {
-      fontSize: '1rem',
-      color: '#6b7280',
-      lineHeight: '1.6',
-      marginBottom: '2rem',
-    },
-    featuresList: {
-      listStyle: 'none',
-      padding: 0,
-      margin: 0,
-    },
-    featureItem: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '0.75rem',
-      marginBottom: '0.75rem',
-      fontSize: '0.95rem',
-      color: '#6b7280',
-    },
-    featureIcon: {
-      color: '#10b981',
-      flexShrink: 0,
-      marginTop: '0.25rem',
-    },
-    
-    // Process Section
-    processSection: {
-      background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-      padding: '8rem 2rem',
-    },
-    faqSection: {
-      padding: '7rem 2rem',
-      background: '#ffffff',
-    },
-    faqContainer: {
-      maxWidth: '1100px',
-      margin: '0 auto',
-      width: '100%',
-      textAlign: 'center',
-    },
-    faqGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-      gap: '1.5rem',
-      marginTop: '3rem',
-      textAlign: 'left',
-    },
-    faqCard: {
-      background: '#f8fafc',
-      borderRadius: '16px',
-      padding: '1.5rem',
-      border: '1px solid rgba(16,185,129,0.15)',
-      boxShadow: '0 10px 24px rgba(15, 23, 42, 0.06)',
-      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    },
-    faqHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: '1rem',
-      cursor: 'pointer',
-      background: 'transparent',
-      border: 'none',
-      padding: 0,
-      width: '100%',
-      textAlign: 'left',
-    },
-    faqQuestion: {
-      fontSize: '1.05rem',
-      fontWeight: 600,
-      color: '#111',
-      marginBottom: 0,
-    },
-    faqAnswer: {
-      fontSize: '0.95rem',
-      color: '#6b7280',
-      lineHeight: '1.6',
-    },
-    faqIcon: {
-      width: '28px',
-      height: '28px',
-      borderRadius: '50%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'rgba(16,185,129,0.12)',
-      color: '#10b981',
-      fontWeight: 700,
-      flexShrink: 0,
-    },
-    processContainer: {
-      maxWidth: '1400px',
-      margin: '0 auto',
-      width: '100%',
-      textAlign: 'center',
-    },
-    processSteps: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      position: 'relative',
-      marginTop: '5rem',
-      flexWrap: 'wrap',
-      gap: '2rem',
-    },
-    processStep: {
-      flex: 1,
-      minWidth: '250px',
-      position: 'relative',
-      zIndex: 2,
-    },
-    stepNumber: {
-      width: '60px',
-      height: '60px',
-      background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
-      borderRadius: '50%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#fff',
-      fontSize: '1.5rem',
-      fontWeight: 600,
-      margin: '0 auto 2rem',
-    },
-    stepIcon: {
-      fontSize: '2rem',
-      marginBottom: '1.5rem',
-    },
-    stepTitle: {
-      fontSize: '1.5rem',
-      fontWeight: 600,
-      color: '#111',
-      marginBottom: '1rem',
-    },
-    stepDescription: {
-      fontSize: '1rem',
-      color: '#6b7280',
-      lineHeight: '1.6',
-    },
-    
-    // CTA Section
-    ctaSection: {
-      padding: '8rem 2rem',
-      background: '#fff',
-      textAlign: 'center',
-    },
-    ctaContainer: {
-      maxWidth: '800px',
-      margin: '0 auto',
-    },
-    ctaTitle: {
-      fontSize: '3.5rem',
-      fontWeight: 300,
-      color: '#111',
-      marginBottom: '2rem',
-      lineHeight: '1.2',
-    },
-    ctaButtons: {
-      display: 'flex',
-      gap: '1.5rem',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-      marginTop: '3rem',
-    },
-    ctaBtn: {
-      background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '50px',
-      padding: '1.25rem 2.5rem',
-      fontSize: '1rem',
-      fontWeight: 500,
-      cursor: 'pointer',
-      letterSpacing: '1px',
-      textTransform: 'uppercase',
-      transition: 'all 0.3s',
-      minWidth: '240px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '0.75rem',
-    },
-    
-    // Footer
-    footer: {
-      background: '#111',
-      color: '#fff',
-      padding: '4rem 3rem',
-    },
-    footerContent: {
-      maxWidth: '1400px',
-      margin: '0 auto',
+      borderRadius: '18px',
+      border: '1px solid rgba(148, 163, 184, 0.18)',
+      boxShadow: '0 18px 40px rgba(15, 23, 42, 0.05)',
+      padding: '26px',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'flex-start',
-      gap: '3rem',
+      justifyContent: 'space-between',
+      minHeight: '240px',
+      overflow: 'hidden',
     },
-    footerTop: {
+    featureCard: {
+      gridColumn: 'span 7',
+      minHeight: '320px',
+      background: 'linear-gradient(135deg, #ffffff 0%, #f4f7f0 100%)',
+      overflow: 'hidden',
+      position: 'relative',
+    },
+    sideCard: {
+      gridColumn: 'span 5',
+      minHeight: '320px',
+    },
+    smallCard: {
+      gridColumn: 'span 4',
+    },
+    highlightCard: {
+      gridColumn: 'span 8',
+      background: 'linear-gradient(135deg, #0b5135 0%, #063d28 100%)',
+      color: '#ecfdf5',
+      minHeight: '240px',
+      border: 'none',
+    },
+    cardTop: {
       display: 'flex',
-      alignItems: 'flex-start',
-      gap: '4rem',
+      alignItems: 'center',
+      gap: '14px',
+      marginBottom: '16px',
+    },
+    cardImageWrap: {
+      height: '176px',
+      margin: '-26px -26px 20px',
+      position: 'relative',
+      overflow: 'hidden',
+      background: '#dde9e1',
+    },
+    cardImage: {
       width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block',
+      filter: 'saturate(1.05) contrast(1.02)',
+    },
+    cardImageShade: {
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(180deg, rgba(7,20,14,0.05) 0%, rgba(7,20,14,0.46) 100%)',
+    },
+    cardImageTag: {
+      position: 'absolute',
+      left: '16px',
+      bottom: '16px',
+      color: '#fff',
+      fontWeight: 800,
+      letterSpacing: '0.06em',
+      textTransform: 'uppercase',
+      fontSize: '0.72rem',
+      background: 'rgba(15, 83, 50, 0.72)',
+      padding: '8px 10px',
+      borderRadius: '999px',
+      border: '1px solid rgba(255,255,255,0.16)',
+    },
+    icon: {
+      width: '44px',
+      height: '44px',
+      borderRadius: '12px',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#eff6f2',
+      color: '#0f5132',
+      flexShrink: 0,
+    },
+    cardTitle: {
+      fontSize: '1.35rem',
+      lineHeight: 1.15,
+      margin: 0,
+      letterSpacing: '-0.03em',
+    },
+    cardText: {
+      fontSize: '0.98rem',
+      lineHeight: 1.7,
+      color: 'inherit',
+      opacity: 0.88,
+      margin: '0 0 18px',
+      maxWidth: '55ch',
+    },
+    bullets: {
+      display: 'grid',
+      gap: '10px',
+      margin: '0 0 22px',
+      padding: 0,
+      listStyle: 'none',
+    },
+    bullet: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px',
+      fontSize: '0.94rem',
+      color: 'inherit',
+    },
+    action: {
+      marginTop: 'auto',
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '10px',
+      width: 'fit-content',
+      border: '1px solid currentColor',
+      borderRadius: '12px',
+      padding: '12px 16px',
+      background: 'transparent',
+      cursor: 'pointer',
+      fontWeight: 700,
+    },
+    miniPanel: {
+      position: 'absolute',
+      right: '22px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '160px',
+      height: '120px',
+      borderRadius: '14px',
+      background: 'linear-gradient(180deg, rgba(15, 61, 46, 0.14), rgba(15, 61, 46, 0.03))',
+      display: 'flex',
+      alignItems: 'end',
+      justifyContent: 'center',
+      padding: '14px',
+    },
+    miniBars: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(5, 1fr)',
+      gap: '8px',
+      width: '100%',
+      alignItems: 'end',
+    },
+    bar: {
+      borderRadius: '8px 8px 0 0',
+      background: 'linear-gradient(180deg, #98f5c5 0%, #60e0a4 100%)',
+    },
+    cta: {
+      marginTop: '26px',
+      background: '#dfe9ff',
+      borderRadius: '20px',
+      padding: '36px 20px',
+      textAlign: 'center',
+      border: '1px solid rgba(59, 130, 246, 0.08)',
+    },
+    ctaTitle: {
+      margin: 0,
+      fontSize: '1.9rem',
+      letterSpacing: '-0.04em',
+    },
+    ctaText: {
+      margin: '12px auto 0',
+      maxWidth: '760px',
+      color: '#475569',
+      lineHeight: 1.7,
+      fontSize: '1rem',
+    },
+    ctaButtons: {
+      marginTop: '20px',
+      display: 'flex',
+      gap: '12px',
+      justifyContent: 'center',
       flexWrap: 'wrap',
     },
-    footerLogoSection: {
-      flex: 1,
-      minWidth: '300px',
+    primaryBtn: {
+      background: '#0f5132',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '10px',
+      padding: '13px 18px',
+      fontWeight: 800,
+      cursor: 'pointer',
+    },
+    secondaryBtn: {
+      background: '#fff',
+      color: '#0f172a',
+      border: '1px solid rgba(148, 163, 184, 0.28)',
+      borderRadius: '10px',
+      padding: '13px 18px',
+      fontWeight: 800,
+      cursor: 'pointer',
+    },
+    footer: {
+      maxWidth: '1180px',
+      margin: '0 auto',
+      padding: '26px 24px 34px',
+      color: '#64748b',
+      display: 'flex',
+      justifyContent: 'space-between',
+      gap: '16px',
+      flexWrap: 'wrap',
+      borderTop: '1px solid rgba(148, 163, 184, 0.16)',
     },
     footerLinks: {
       display: 'flex',
-      gap: '4rem',
+      gap: '22px',
       flexWrap: 'wrap',
-      flex: 2,
-    },
-    linkColumn: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '1rem',
-      textAlign: 'left',
-    },
-    linkTitle: {
-      fontSize: '1rem',
-      fontWeight: 500,
-      color: '#10b981',
-      marginBottom: '0.5rem',
-      letterSpacing: '1px',
-    },
-    footerLink: {
-      color: 'rgba(255,255,255,0.7)',
-      fontSize: '0.9rem',
-      textDecoration: 'none',
-      cursor: 'pointer',
-      background: 'none',
-      border: 'none',
-      padding: 0,
-      textAlign: 'left',
-      transition: 'color 0.3s',
-    },
-    footerBottom: {
-      width: '100%',
-      paddingTop: '3rem',
-      borderTop: '1px solid rgba(255,255,255,0.1)',
-    },
-    footerText: {
-      fontSize: '0.9rem',
-      color: 'rgba(255,255,255,0.5)',
-      letterSpacing: '1px',
     },
   };
 
   return (
     <div style={styles.page}>
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-        
-        .service-card.visible {
-          animation: fadeInUp 0.8s ease forwards;
-        }
-        
-        .service-card:hover .service-image {
-          transform: scale(1.05);
-        }
-        
-        .tab:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .service-cta:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 10px 28px rgba(16,185,129,0.25);
-        }
-
-        .faq-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
-        }
-        
-        .stat-card:hover .stat-icon {
-          animation: float 2s ease-in-out infinite;
-        }
-        
-        .cta-btn:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 24px rgba(16,185,129,0.3);
-        }
-        
-        .footer-link:hover {
-          color: #10b981 !important;
-        }
-        
-        .process-steps::before {
-          content: '';
-          position: absolute;
-          top: 30px;
-          left: 12.5%;
-          right: 12.5%;
-          height: 2px;
-          background: rgba(16,185,129,0.2);
-          z-index: 1;
-        }
-        
-        @media (max-width: 768px) {
-          .process-steps::before {
-            display: none;
-          }
-        }
-      `}</style>
-
-      {/* Header */}
       <header style={styles.header}>
-        <div style={styles.logoSection} onClick={() => navigate('/home')}>
-          <span style={styles.logo}><Leaf size={32} color="#10b981" /></span>
-          <div style={styles.brandText}>
-            <h1 style={styles.title}>FASALGUARD</h1>
-            <div style={styles.subtitle}>Precision Agriculture</div>
-          </div>
-        </div>
-        <nav style={styles.nav}>
-          <button style={styles.navLink} onClick={() => navigate('/home')}>Home</button>
-          <button style={styles.navLink} onClick={() => navigate('/about')}>About</button>
-          <button style={{...styles.navLink, color: '#10b981', fontWeight: 500}} onClick={() => navigate('/services')}>Services</button>
-          <button style={styles.navLink} onClick={() => navigate('/past-trends')}>Past Trends</button>
-          <button style={styles.navLink} onClick={() => navigate('/contact')}>Contact</button>
-          <button style={{...styles.navLink, background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)', color: '#fff', padding: '0.7rem 1.5rem', borderRadius: '50px'}} onClick={() => navigate('/crop-prediction')}>
-            🌱 Predict Crops
+        <div style={styles.headerInner}>
+          <button type="button" onClick={() => navigate('/home')} style={{ ...styles.brand, background: 'transparent', border: 'none', cursor: 'pointer' }}>
+            <Leaf size={22} />
+            <span>FasalGuard</span>
           </button>
-        </nav>
+          <nav style={styles.nav}>
+            <button type="button" style={styles.navLink} onClick={() => navigate('/services')}>Services</button>
+            <button type="button" style={styles.navLink} onClick={() => navigate('/about')}>About Us</button>
+            <button type="button" style={styles.navLink} onClick={() => navigate('/contact')}>Contact Us</button>
+            <button type="button" style={styles.accountBtn} onClick={() => navigate('/profile')} aria-label="Account">
+              <ShieldCheck size={18} />
+            </button>
+          </nav>
+        </div>
       </header>
 
-      {/* Hero Section */}
-      <section style={styles.heroSection}>
-        <div style={styles.heroContainer}>
-          <span style={styles.heroLabel}>OUR SERVICES</span>
-          <h1 style={styles.heroTitle}>
-            Comprehensive Agricultural Intelligence Solutions
-          </h1>
-          <p style={styles.heroSubtitle}>
-            From weather prediction to yield analysis, we provide farmers with the tools and insights needed to maximize productivity, reduce risks, and build sustainable farming practices.
-          </p>
-          <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap'}}>
-            <button style={{...styles.ctaBtn, background: 'linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%)'}} onClick={() => navigate('/crop-prediction')}>
-              <Zap size={20} />
-              Start Free Trial
-            </button>
-            <button style={{...styles.ctaBtn, background: 'linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%)'}} onClick={() => navigate('/contact')}>
-              <Users size={20} />
-              Contact
-            </button>
-          </div>
-        </div>
-        {/* Animated Background Elements */}
-        <div style={{position: 'absolute', top: '10%', right: '10%', opacity: 0.1, animation: 'float 6s ease-in-out infinite'}}>
-          <Cloud size={120} color="#137e5bff" />
-        </div>
-        <div style={{position: 'absolute', bottom: '20%', left: '10%', opacity: 0.1, animation: 'float 8s ease-in-out infinite', animationDelay: '1s'}}>
-          <Sun size={100} color="#f59e0b" />
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section style={styles.statsSection}>
-        <div style={styles.statsContainer}>
-          <div style={styles.statsGrid}>
-            {serviceStats.map((stat, index) => (
-              <div key={index} style={styles.statCard} className="stat-card">
-                <div style={styles.statIcon}>{stat.icon}</div>
-                <div style={styles.statNumber}>{stat.value}</div>
-                <div style={styles.statLabel}>{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section style={styles.servicesSection}>
-        <div style={styles.servicesContainer}>
-          <div style={styles.servicesHeader}>
-            <h2 style={styles.sectionTitle}>Our Core Services</h2>
-            <p style={styles.sectionSubtitle}>
-              Discover how our AI-powered platform transforms traditional farming into data-driven precision agriculture
+      <section style={styles.hero}>
+        <div style={styles.heroGrid}>
+          <div>
+            <div style={styles.eyebrow}>Precision Intelligence</div>
+            <h1 style={styles.title}>FasalGuard services built for field decisions.</h1>
+            <p style={styles.subtitle}>
+              Everything on this page stays inside the FasalGuard ecosystem: satellite insights, soil checks, weather guidance, and yield prediction that support day-to-day farm decisions.
             </p>
+
+            <div style={styles.statsRow}>
+              {stats.map((item) => (
+                <div key={item.label} style={styles.statCard}>
+                  <div style={styles.statValue}>{item.value}</div>
+                  <div style={styles.statLabel}>{item.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Service Tabs */}
-          <div style={styles.serviceTabs}>
-            {servicesData.map(service => (
-              <button
-                key={service.id}
-                style={{
-                  ...styles.tab,
-                  ...(activeTab === service.id ? styles.activeTab : {})
-                }}
-                onClick={() => setActiveTab(service.id)}
-                className="tab"
-              >
-                <span>{service.icon}</span>
-                {service.title}
+          <div style={styles.heroGallery}>
+            <div style={{ ...styles.galleryTile, ...styles.galleryTileTall }}>
+              <img src="/service_smart.png" alt="FasalGuard farm intelligence" style={styles.galleryTileImage} />
+              <div style={styles.galleryOverlay} />
+              <div style={styles.galleryText}>Satellite imagery and field intelligence for smarter crop action.</div>
+            </div>
+            <div style={styles.galleryTile}>
+              <img src="/service_hero_wheat.png" alt="Wheat field" style={styles.galleryTileImage} />
+              <div style={styles.galleryOverlay} />
+              <div style={styles.galleryText}>Healthy crop textures and field coverage.</div>
+            </div>
+            <div style={styles.galleryTile}>
+              <img src="/service_hero_rice.png" alt="Rice field" style={styles.galleryTileImage} />
+              <div style={styles.galleryOverlay} />
+              <div style={styles.galleryText}>Visual crop intelligence tuned for farms.</div>
+            </div>
+            <div style={styles.galleryTile}>
+              <img src="/service_hero_maize.png" alt="Maize crop" style={styles.galleryTileImage} />
+              <div style={styles.galleryOverlay} />
+              <div style={styles.galleryText}>Field-level planning for crop growth and yield.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style={styles.content}>
+        <div style={styles.grid}>
+          <article style={{ ...styles.card, ...styles.featureCard }}>
+            <div style={styles.cardImageWrap}>
+              <img src={serviceCards[0].image} alt={serviceCards[0].title} style={styles.cardImage} />
+              <div style={styles.cardImageShade} />
+              <div style={styles.cardImageTag}>Satellite focus</div>
+            </div>
+            <div>
+              <div style={styles.cardTop}>
+                <div style={styles.icon}>{serviceCards[0].icon}</div>
+                <div>
+                  <h2 style={styles.cardTitle}>{serviceCards[0].title}</h2>
+                </div>
+              </div>
+              <p style={styles.cardText}>{serviceCards[0].description}</p>
+              <ul style={styles.bullets}>
+                {serviceCards[0].bullets.map((bullet) => (
+                  <li key={bullet} style={styles.bullet}><CheckMark />{bullet}</li>
+                ))}
+              </ul>
+              <button type="button" style={{ ...styles.action, color: '#0f5132' }} onClick={() => navigate(serviceCards[0].actionRoute)}>
+                {serviceCards[0].actionLabel} <ArrowRight size={16} />
               </button>
-            ))}
-          </div>
+            </div>
+            <div style={styles.miniPanel} aria-hidden="true">
+              <div style={styles.miniBars}>
+                {[34, 52, 68, 84, 60].map((height, index) => (
+                  <div key={index} style={{ ...styles.bar, height: `${height}%` }} />
+                ))}
+              </div>
+            </div>
+          </article>
 
-          {/* Services Grid */}
-          <div style={styles.serviceGrid}>
-            {servicesData.map(service => (
-              <div
-                key={service.id}
-                style={{
-                  ...styles.serviceCard,
-                  opacity: visibleServices.includes(service.id) ? 1 : 0,
-                  transform: visibleServices.includes(service.id) ? 'translateY(0)' : 'translateY(30px)',
-                  animationDelay: service.animationDelay,
-                }}
-                className="service-card"
-                data-service-id={service.id}
-              >
-                <div style={{overflow: 'hidden'}}>
-                  <img 
-                    src={service.image} 
-                    alt={service.title}
-                    style={styles.serviceImage}
-                    className="service-image"
-                  />
+          <article style={{ ...styles.card, ...styles.sideCard }}>
+            <div style={styles.cardImageWrap}>
+              <img src={serviceCards[1].image} alt={serviceCards[1].title} style={styles.cardImage} />
+              <div style={styles.cardImageShade} />
+              <div style={styles.cardImageTag}>Soil first</div>
+            </div>
+            <div>
+              <div style={styles.cardTop}>
+                <div style={styles.icon}>{serviceCards[1].icon}</div>
+                <h2 style={styles.cardTitle}>{serviceCards[1].title}</h2>
+              </div>
+              <p style={styles.cardText}>{serviceCards[1].description}</p>
+              <ul style={styles.bullets}>
+                {serviceCards[1].bullets.map((bullet) => (
+                  <li key={bullet} style={styles.bullet}><CheckMark />{bullet}</li>
+                ))}
+              </ul>
+            </div>
+            <button type="button" style={{ ...styles.action, color: '#0f5132' }} onClick={() => navigate(serviceCards[1].actionRoute)}>
+              {serviceCards[1].actionLabel} <ArrowRight size={16} />
+            </button>
+          </article>
+
+          <article style={{ ...styles.card, ...styles.smallCard }}>
+            <div style={styles.cardImageWrap}>
+              <img src={serviceCards[2].image} alt={serviceCards[2].title} style={styles.cardImage} />
+              <div style={styles.cardImageShade} />
+              <div style={styles.cardImageTag}>Weather ready</div>
+            </div>
+            <div style={styles.cardTop}>
+              <div style={styles.icon}>{serviceCards[2].icon}</div>
+              <h2 style={styles.cardTitle}>{serviceCards[2].title}</h2>
+            </div>
+            <p style={styles.cardText}>{serviceCards[2].description}</p>
+            <div style={{ display: 'grid', gap: '8px', marginBottom: '20px' }}>
+              {serviceCards[2].bullets.map((bullet) => (
+                <div key={bullet} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#475569', fontSize: '0.94rem' }}>
+                  <CheckMark /> {bullet}
                 </div>
-                <div style={styles.serviceContent}>
-                  <div style={styles.serviceIcon}>{service.icon}</div>
-                  <h3 style={styles.serviceTitle}>{service.title}</h3>
-                  <div style={styles.serviceSubtitle}>{service.subtitle}</div>
-                  <p style={styles.serviceDescription}>{service.description}</p>
-                  <ul style={styles.featuresList}>
-                    {service.features.map((feature, idx) => (
-                      <li key={idx} style={styles.featureItem}>
-                        <CheckCircle size={18} style={styles.featureIcon} />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <button
-                    style={{
-                      ...styles.tab,
-                      background: service.gradient,
-                      color: '#fff',
-                      marginTop: '1.5rem',
-                    }}
-                    onClick={() => navigate(resolveServiceRoute(service.title))}
-                    className="service-cta"
-                  >
-                    Try {service.title}
-                    <ArrowRight size={18} />
-                  </button>
+              ))}
+            </div>
+            <button type="button" style={{ ...styles.action, color: '#0f5132' }} onClick={() => navigate(serviceCards[2].actionRoute)}>
+              {serviceCards[2].actionLabel} <ArrowRight size={16} />
+            </button>
+          </article>
+
+          <article style={{ ...styles.card, ...styles.highlightCard }}>
+            <div style={styles.cardImageWrap}>
+              <img src={serviceCards[3].image} alt={serviceCards[3].title} style={styles.cardImage} />
+              <div style={styles.cardImageShade} />
+              <div style={styles.cardImageTag}>Yield planning</div>
+            </div>
+            <div style={styles.cardTop}>
+              <div style={{ ...styles.icon, background: 'rgba(255,255,255,0.12)', color: '#ecfdf5' }}>{serviceCards[3].icon}</div>
+              <h2 style={{ ...styles.cardTitle, color: '#ecfdf5' }}>{serviceCards[3].title}</h2>
+            </div>
+            <p style={{ ...styles.cardText, color: '#d1fae5' }}>{serviceCards[3].description}</p>
+            <div style={{ display: 'grid', gap: '10px', marginBottom: '22px' }}>
+              {serviceCards[3].bullets.map((bullet) => (
+                <div key={bullet} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#d1fae5', fontSize: '0.96rem' }}>
+                  <CheckMark dark /> {bullet}
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+            <button type="button" style={{ ...styles.action, color: '#ecfdf5', borderColor: 'rgba(236, 253, 245, 0.45)' }} onClick={() => navigate(serviceCards[3].actionRoute)}>
+              {serviceCards[3].actionLabel} <ArrowRight size={16} />
+            </button>
+          </article>
         </div>
-      </section>
 
-      {/* FAQ Section */}
-      <section style={styles.faqSection}>
-        <div style={styles.faqContainer}>
-          <span style={styles.heroLabel}>FAQ</span>
-          <h2 style={styles.sectionTitle}>Common Questions</h2>
-          <p style={styles.sectionSubtitle}>
-            Quick answers to the most asked questions about our services.
+        <div style={styles.cta}>
+          <h2 style={styles.ctaTitle}>Ready to transform your farm management?</h2>
+          <p style={styles.ctaText}>
+            Stay inside FasalGuard for satellite intelligence, soil analysis, weather guidance, and yield planning. The backend stays unchanged, so the same API routes continue powering the platform.
           </p>
-          <div style={styles.faqGrid}>
-            {[
-              {
-                q: 'How do I get weather predictions?',
-                a: 'Open Crop Prediction to see weather-driven recommendations and forecasts.'
-              },
-              {
-                q: 'Where can I see soil health details?',
-                a: 'Use the Soil Analysis page for pH, nutrients, and soil score.'
-              },
-              {
-                q: 'How do heatmaps help farmers?',
-                a: 'Heatmaps show stress zones so you can act on the right areas.'
-              },
-              {
-                q: 'What is Satellite Field Analysis & Alert System?',
-                a: 'It combines satellite data with alerts for timely field actions.'
-              },
-              {
-                q: 'Where can I view past trends?',
-                a: 'Open Past Trends for historical performance and yield insights.'
-              }
-            ].map((item, idx) => (
-              <div key={idx} style={styles.faqCard} className="faq-card">
-                <button
-                  type="button"
-                  style={styles.faqHeader}
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  aria-expanded={openFaq === idx}
-                  aria-controls={`faq-answer-${idx}`}
-                >
-                  <span style={styles.faqQuestion}>{item.q}</span>
-                  <span style={styles.faqIcon}>{openFaq === idx ? '-' : '+'}</span>
-                </button>
-                {openFaq === idx && (
-                  <div id={`faq-answer-${idx}`} style={styles.faqAnswer}>{item.a}</div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Process Section */}
-      <section style={styles.processSection}>
-        <div style={styles.processContainer}>
-          <span style={styles.heroLabel}>HOW IT WORKS</span>
-          <h2 style={styles.sectionTitle}>Our 4-Step Process</h2>
-          <p style={styles.sectionSubtitle}>
-            From data collection to actionable insights, our systematic approach ensures accurate and reliable agricultural intelligence
-          </p>
-          
-          <div style={styles.processSteps} className="process-steps">
-            {processSteps.map(step => (
-              <div key={step.step} style={styles.processStep}>
-                <div style={styles.stepNumber}>{step.step}</div>
-                <div style={styles.stepIcon}>{step.icon}</div>
-                <h3 style={styles.stepTitle}>{step.title}</h3>
-                <p style={styles.stepDescription}>{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section style={styles.ctaSection}>
-        <div style={styles.ctaContainer}>
-          <h2 style={styles.ctaTitle}>Ready to Transform Your Farming?</h2>
-          <p style={styles.sectionSubtitle}>
-            Join thousands of farmers who are already increasing yields, reducing costs, and farming smarter with FasalGuard
-          </p>
-          
           <div style={styles.ctaButtons}>
-            <button 
-              style={styles.ctaBtn} 
-              className="cta-btn"
-              onClick={() => navigate('/crop-prediction')}
-            >
-              <Zap size={20} />
-              Start Free Trial
-            </button>
-            <button 
-              style={{...styles.ctaBtn, background: 'linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%)'}} 
-              className="cta-btn"
-              onClick={() => navigate('/contact')}
-            >
-              <Users size={20} />
-              Schedule Demo
-            </button>
-            <button 
-              style={{...styles.ctaBtn, background: 'linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%)'}} 
-              className="cta-btn"
-              onClick={() => navigate('/services')}
-            >
-              <BarChart size={20} />
-              View All Services
-            </button>
+            <button type="button" style={styles.primaryBtn} onClick={() => navigate('/satellite-analysis')}>Get Started Today</button>
+            <button type="button" style={styles.secondaryBtn} onClick={() => navigate('/contact')}>Schedule a Demo</button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer style={styles.footer}>
-        <div style={styles.footerContent}>
-          <div style={styles.footerTop}>
-            <div style={styles.footerLogoSection}>
-              <div style={{...styles.logoSection, alignItems: 'flex-start'}} onClick={() => navigate('/home')}>
-                <span style={{...styles.logo, border: '2px solid #179e71ff'}}><Leaf size={32} color="#10b981" /></span>
-                <div style={styles.brandText}>
-                  <h1 style={{...styles.title, color: '#fff', textAlign: 'left'}}>FASALGUARD</h1>
-                  <div style={{...styles.subtitle, color: '#10b981', textAlign: 'left'}}>Precision Agriculture Platform</div>
-                </div>
-              </div>
-              <p style={{color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem', marginTop: '1.5rem', lineHeight: '1.6', maxWidth: '400px'}}>
-                Transforming Pakistan's agriculture through AI, satellite intelligence, and climate-smart solutions for sustainable farming.
-              </p>
-            </div>
-            
-            <div style={styles.footerLinks}>
-              <div style={styles.linkColumn}>
-                <div style={styles.linkTitle}>Services</div>
-                <button style={styles.footerLink} onClick={() => navigate('/crop-prediction')}>Weather Predictions</button>
-                <button style={styles.footerLink} onClick={() => navigate('/crop-prediction')}>Climate Analysis</button>
-                <button style={styles.footerLink} onClick={() => navigate('/soil-analysis')}>Soil Analysis & Health</button>
-                <button style={styles.footerLink} onClick={() => navigate('/satellite-analysis')}>Crop Health Heatmaps</button>
-                <button style={styles.footerLink} onClick={() => navigate('/satellite-analysis')}>Satellite Field Analysis & Alert System</button>
-                <button style={styles.footerLink} onClick={() => navigate('/past-trends')}>Past Trend Analysis</button>
-              </div>
-              
-              <div style={styles.linkColumn}>
-                <div style={styles.linkTitle}>Platform</div>
-                <button style={styles.footerLink} onClick={() => navigate('/crop-prediction')}>Crop Prediction</button>
-                <button style={styles.footerLink} onClick={() => navigate('/past-trends')}>Past Trends</button>
-                <button style={styles.footerLink} onClick={() => navigate('/prediction-results')}>Dashboard</button>
-                <button style={styles.footerLink}>Mobile App</button>
-              </div>
-              
-              <div style={styles.linkColumn}>
-                <div style={styles.linkTitle}>Company</div>
-                <button style={styles.footerLink} onClick={() => navigate('/about')}>About Us</button>
-                <button style={styles.footerLink} onClick={() => navigate('/contact')}>Contact</button>
-                <button style={styles.footerLink}>Careers</button>
-                <button style={styles.footerLink}>Blog</button>
-                <button style={styles.footerLink} onClick={() => window.dispatchEvent(new Event('open-help-chat'))}>Help</button>
-              </div>
-            </div>
-          </div>
-          
-          <div style={styles.footerBottom}>
-            <div style={styles.footerText}>
-              © 2025 THE FASALGUARD. TRANSFORMING PAKISTAN'S AGRICULTURE WITH AI & INNOVATION.
-            </div>
-          </div>
-        </div>
+        <div style={{ fontWeight: 800, color: '#0f3d2e' }}>FasalGuard</div>
+        <div>Satellite intelligence, soil insight, weather guidance, and yield support for farmers.</div>
       </footer>
     </div>
   );
 };
+
+const CheckMark = ({ dark = false }) => (
+  <span style={{
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '18px',
+    height: '18px',
+    borderRadius: '999px',
+    background: dark ? 'rgba(255,255,255,0.14)' : '#e7f5ee',
+    color: dark ? '#b8f3cf' : '#0f5132',
+    flexShrink: 0,
+  }}>
+    <Leaf size={11} />
+  </span>
+);
 
 export default Services;

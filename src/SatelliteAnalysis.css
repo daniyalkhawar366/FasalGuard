@@ -3,15 +3,15 @@
 /* SatelliteAnalysis.css - light, high-contrast, action-first design */
 
 :root {
-  --sat-bg: #f8f9fa;
+  --sat-bg: #eef8f1;
   --sat-surface: #ffffff;
   --sat-surface-soft: #f3f6f9;
   --sat-border: #d8dee6;
   --sat-text: #1f2937;
   --sat-text-strong: #0f172a;
   --sat-text-muted: #5f6b7a;
-  --sat-primary: #2d6a4f;
-  --sat-primary-strong: #1b4332;
+  --sat-primary: #0f7a46;
+  --sat-primary-strong: #064e3b;
   --sat-success: #188038;
   --sat-warning: #52796f;
   --sat-danger: #2d6a4f;
@@ -28,7 +28,7 @@
 
 .sat-page {
   min-height: 100vh;
-  background: var(--sat-bg);
+  background: radial-gradient(circle at top, #f4fbf6 0%, var(--sat-bg) 45%, #e6f4ea 100%);
   color: var(--sat-text);
   font-family: "Google Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   overflow-x: hidden;
@@ -38,8 +38,8 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
+  background: rgba(243, 250, 245, 0.94);
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--sat-border);
 }
 
@@ -232,10 +232,125 @@ main {
   font-size: clamp(1.5rem, 2.6vw, 2.2rem);
   font-weight: 800;
   letter-spacing: -0.01em;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 35%, #0ea5e9 70%, #6366f1 100%);
+  background: linear-gradient(135deg, #14532d 0%, #0f7a46 38%, #22c55e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.sat-hero-banner {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.98) 0%, rgba(15, 122, 70, 0.92) 55%, rgba(20, 83, 45, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 50px rgba(6, 78, 59, 0.18);
+}
+
+.sat-hero-banner-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1.2rem;
+}
+
+.sat-hero-copy {
+  color: #fff;
+  padding: 0.4rem 0.4rem 0.4rem 0.7rem;
+}
+
+.sat-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #dcfce7;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.sat-hero-heading {
+  margin: 0;
+  font-size: clamp(2rem, 3.6vw, 3.4rem);
+  letter-spacing: -0.06em;
+  line-height: 1.02;
+}
+
+.sat-hero-text {
+  margin: 0.9rem 0 0;
+  max-width: 34rem;
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.7;
+}
+
+.sat-hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.sat-hero-pill {
+  border-radius: 999px;
+  padding: 0.42rem 0.75rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #effaf4;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.sat-hero-visual {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.sat-hero-image-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  min-height: 150px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.16);
+}
+
+.sat-hero-image-card.tall {
+  grid-row: span 2;
+  min-height: 316px;
+}
+
+.sat-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sat-hero-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 44, 27, 0.05) 0%, rgba(4, 44, 27, 0.55) 100%);
+}
+
+.sat-hero-image-caption {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 0.65rem 0.8rem;
+  border-radius: 14px;
+  background: rgba(4, 44, 27, 0.86);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .sat-subtitle {

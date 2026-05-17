@@ -75,15 +75,7 @@ export default function HomePage({ onLogout, user }) {
     } catch {
       // ignore storage errors
     }
-    navigate('/crop-prediction');
-  };
-
-  const handleCropNavClick = () => {
-    setCropNavLoading(true);
-    setTimeout(() => {
-      setCropNavLoading(false);
-      navigate('/crop-prediction');
-    }, 850);
+    navigate('/satellite-analysis');
   };
 
 
@@ -843,28 +835,6 @@ export default function HomePage({ onLogout, user }) {
           <button style={styles.navLink} className="navLink" type="button" onClick={() => navigate('/about')}>About Us</button>
           <button style={styles.navLink} className="navLink" type="button" onClick={() => navigate('/services')}>Services</button>
           <button style={styles.navLink} className="navLink" type="button" onClick={() => navigate('/contact')}>Contact Us</button>
-          <motion.button
-            style={styles.navLink}
-            className="navLink"
-            type="button"
-            onClick={handleCropNavClick}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.96 }}
-          >
-            Crop Prediction
-          </motion.button>
-          <button style={styles.navLink} className="navLink" type="button" onClick={() => navigate('/soil-analysis')}>Soil Analysis</button>
-          <button style={styles.navLink} className="navLink" type="button" onClick={() => navigate('/satellite-analysis')}>Satellite</button>
-          <motion.button
-            style={styles.navLink}
-            className="navLink"
-            type="button"
-            onClick={() => navigate('/voice-chat')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.96 }}
-          >
-            Voice Chat
-          </motion.button>
           <div style={{ position: 'relative', marginLeft: '1.5rem' }}>
             <span
               style={{ color: scrolled ? '#374151' : '#fff', fontSize: '1.5rem', cursor: 'pointer', transition: 'color 0.3s' }}
