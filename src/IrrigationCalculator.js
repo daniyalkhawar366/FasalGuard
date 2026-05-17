@@ -673,7 +673,7 @@ export default function EnhancedIrrigationCalculator({ predictionData, city }) {
           gridTemplateColumns: '1fr 1fr', 
           gap: '1.5rem',
           marginBottom: '2rem'
-        }}>
+        }} className="resp-split">
           {/* Irrigation Schedule Chart */}
           <div style={{
             background: '#ffffff',

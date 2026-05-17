@@ -507,13 +507,13 @@ const Services = () => {
 
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
+      <header style={styles.header} className="resp-header">
         <div style={styles.headerInner}>
           <button type="button" onClick={() => navigate('/home')} style={{ ...styles.brand, background: 'transparent', border: 'none', cursor: 'pointer' }}>
             <Leaf size={22} />
             <span>FasalGuard</span>
           </button>
-          <nav style={styles.nav}>
+          <nav style={styles.nav} className="resp-nav" aria-label="Main navigation">
             <button type="button" style={styles.navLink} onClick={() => navigate('/services')}>Services</button>
             <button type="button" style={styles.navLink} onClick={() => navigate('/about')}>About Us</button>
             <button type="button" style={styles.navLink} onClick={() => navigate('/contact')}>Contact Us</button>
@@ -526,7 +526,7 @@ const Services = () => {
 
       <section style={styles.hero}>
         <div style={styles.heroGrid}>
-          <div>
+          <div style={styles.heroContent} className="resp-hero-content">
             <div style={styles.eyebrow}>Precision Intelligence</div>
             <h1 style={styles.title}>FasalGuard services built for field decisions.</h1>
             <p style={styles.subtitle}>
@@ -543,7 +543,7 @@ const Services = () => {
             </div>
           </div>
 
-          <div style={styles.heroGallery}>
+          <div style={styles.heroGallery} className="resp-gallery">
             <div style={{ ...styles.galleryTile, ...styles.galleryTileTall }}>
               <img src="/service_smart.png" alt="FasalGuard farm intelligence" style={styles.galleryTileImage} />
               <div style={styles.galleryOverlay} />
@@ -569,7 +569,7 @@ const Services = () => {
       </section>
 
       <section style={styles.content}>
-        <div style={styles.grid}>
+        <div style={styles.grid} className="resp-grid">
           <article style={{ ...styles.card, ...styles.featureCard }}>
             <div style={styles.cardImageWrap}>
               <img src={serviceCards[0].image} alt={serviceCards[0].title} style={styles.cardImage} />
@@ -580,7 +580,7 @@ const Services = () => {
               <div style={styles.cardTop}>
                 <div style={styles.icon}>{serviceCards[0].icon}</div>
                 <div>
-                  <h2 style={styles.cardTitle}>{serviceCards[0].title}</h2>
+                  <h1 style={styles.heroTitle} className="resp-hero-title">Precision agricultural services.</h1>
                 </div>
               </div>
               <p style={styles.cardText}>{serviceCards[0].description}</p>
@@ -659,7 +659,7 @@ const Services = () => {
               <h2 style={{ ...styles.cardTitle, color: '#ecfdf5' }}>{serviceCards[3].title}</h2>
             </div>
             <p style={{ ...styles.cardText, color: '#d1fae5' }}>{serviceCards[3].description}</p>
-            <div style={{ display: 'grid', gap: '10px', marginBottom: '22px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} className="resp-nav-actions">
               {serviceCards[3].bullets.map((bullet) => (
                 <div key={bullet} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#d1fae5', fontSize: '0.96rem' }}>
                   <CheckMark dark /> {bullet}

@@ -522,14 +522,14 @@ export default function AboutUs() {
 
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
+      <header style={styles.header} className="resp-header">
         <div style={styles.headerInner}>
           <button type="button" style={styles.brand} onClick={() => go('/home')}>
             <span style={styles.brandMark}><Leaf size={18} /></span>
             FasalGuard
           </button>
 
-          <nav style={styles.nav} aria-label="Main navigation">
+          <nav style={styles.nav} className="resp-nav" aria-label="Main navigation">
             {navigationItems.map((item) => (
               <button
                 key={item.label}
@@ -546,7 +546,7 @@ export default function AboutUs() {
             ))}
           </nav>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} className="resp-nav-actions">
             <button type="button" style={styles.navButton} onClick={() => go('/contact')}>Contact Us</button>
             <button type="button" style={styles.accountButton} onClick={() => go('/profile')} aria-label="Account">
               <SunMedium size={18} />
@@ -560,18 +560,18 @@ export default function AboutUs() {
           <div style={styles.heroCard}>
             <img src="/about_bg.png" alt="Green agricultural field" style={styles.heroImage} />
             <div style={styles.heroOverlay} />
-            <div style={styles.heroContent}>
+            <div style={styles.heroContent} className="resp-hero-content">
               <div style={styles.heroText}>
                 <div style={styles.eyebrow}>
                   <Tractor size={14} />
                   Precision agriculture for FasalGuard
                 </div>
-                <h1 style={styles.heroTitle}>Bridging satellite intelligence and healthy soil decisions.</h1>
+                <h1 style={styles.heroTitle} className="resp-hero-title">Bridging satellite intelligence and healthy soil decisions.</h1>
                 <p style={styles.heroCopy}>
                   FasalGuard helps farmers read crop conditions more clearly with satellite analysis, soil insights,
                   weather context, and practical guidance that stays focused on the field.
                 </p>
-                <div style={styles.heroActions}>
+                <div style={styles.heroActions} className="resp-hero-actions">
                   <button type="button" style={styles.primaryAction} onClick={() => go('/satellite-analysis')}>
                     Explore Platform <ArrowRight size={17} />
                   </button>
@@ -582,18 +582,18 @@ export default function AboutUs() {
               </div>
 
               <div style={styles.heroVisual}>
-                <div style={styles.visualPanel}>
-                  <img src="/about_bg.png" alt="Agricultural illustration" style={styles.visualImage} />
+                <div style={styles.visualPanel} className="resp-visual-panel">
+                  <img src="/about_bg.png" alt="Agricultural illustration" style={styles.visualImage} className="resp-visual-image" />
                   <div style={styles.visualBadge}><Satellite size={16} /> Live crop monitoring</div>
                 </div>
-                <div style={styles.visualPanel}>
-                  <img src="/contact_bg.png" alt="Healthy wheat field" style={styles.visualImage} />
+                <div style={styles.visualPanel} className="resp-visual-panel">
+                  <img src="/contact_bg.png" alt="Healthy wheat field" style={styles.visualImage} className="resp-visual-image" />
                 </div>
-                <div style={styles.visualPanel}>
-                  <img src="/account_bg.png" alt="Rice crop field" style={styles.visualImage} />
+                <div style={styles.visualPanel} className="resp-visual-panel">
+                  <img src="/account_bg.png" alt="Rice crop field" style={styles.visualImage} className="resp-visual-image" />
                 </div>
-                <div style={styles.visualPanel}>
-                  <img src="/satellite_bg.png" alt="Sugarcane crop field" style={styles.visualImage} />
+                <div style={styles.visualPanel} className="resp-visual-panel">
+                  <img src="/satellite_bg.png" alt="Sugarcane crop field" style={styles.visualImage} className="resp-visual-image" />
                 </div>
               </div>
             </div>
@@ -631,7 +631,7 @@ export default function AboutUs() {
             </p>
           </div>
 
-          <div style={styles.splitSection}>
+          <div style={styles.splitSection} className="resp-split">
             <div style={styles.tallCard}>
               <img src="/services_bg.png" alt="Green crop field background" style={styles.tallImage} />
               <div style={styles.tallOverlay} />
@@ -660,7 +660,7 @@ export default function AboutUs() {
         </section>
 
         <section style={styles.section}>
-          <div style={styles.cta}>
+          <div style={styles.cta} className="resp-grid">
             <div style={styles.ctaPanel}>
               <div>
                 <h2 style={styles.ctaTitle}>Join the Future of Farming</h2>

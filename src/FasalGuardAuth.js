@@ -562,8 +562,8 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
 
   // Main render
   return (
-    <div style={styles.mainContainer}>
-      <div style={styles.leftSection}>
+    <div style={styles.mainContainer} className="resp-auth-main">
+      <div style={styles.leftSection} className="resp-auth-left">
         <div style={styles.leftOverlay} />
         <div style={styles.leftContent}>
           <div style={styles.leftLogoText}>FasalGuard</div>
@@ -571,7 +571,7 @@ const FasalGuardAuth = ({ onLogin, initialView = 'login' }) => {
         </div>
       </div>
       <div style={styles.rightSection}>
-        <div style={styles.formCard}>
+        <div style={styles.formCard} className="resp-auth-card">
           {currentView === 'login' && (
             <React.Fragment>
               <div style={styles.header}>

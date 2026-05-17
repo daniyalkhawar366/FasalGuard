@@ -430,13 +430,13 @@ export default function ContactPage() {
 
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
+      <header style={styles.header} className="resp-header">
         <div style={styles.headerInner}>
           <button type="button" style={styles.brand} onClick={() => navigate('/home')}>
             <Leaf size={22} />
             <span>FasalGuard</span>
           </button>
-          <nav style={styles.nav}>
+          <nav style={styles.nav} className="resp-nav">
             <button type="button" style={styles.navLink} onClick={() => navigate('/about')}>About Us</button>
             <button type="button" style={styles.navLink} onClick={() => navigate('/services')}>Services</button>
             <button type="button" style={styles.navLink} onClick={() => navigate('/contact')}>Contact Us</button>
@@ -465,9 +465,9 @@ export default function ContactPage() {
         <div style={styles.heroPanel}>
           <img src="/contact_bg.png" alt="FasalGuard agriculture technology" style={styles.heroImage} />
           <div style={styles.heroOverlay} />
-          <div style={styles.heroContent}>
+          <div style={styles.heroContent} className="resp-hero-content">
             <div style={styles.eyebrow}>Direct Inquiry</div>
-            <h1 style={styles.heroTitle}>Connect with Intelligence</h1>
+            <h1 style={styles.heroTitle} className="resp-hero-title">Connect with Intelligence</h1>
             <p style={styles.heroText}>
               Reach the FasalGuard team for satellite analysis, crop guidance, and deployment support. We keep the platform focused on farm decisions and the same backend services already powering the app.
             </p>
@@ -476,7 +476,7 @@ export default function ContactPage() {
       </section>
 
       <main style={styles.main}>
-        <div style={styles.grid}>
+        <div style={styles.grid} className="resp-grid">
           <section style={{ ...styles.card, ...styles.formCard }}>
             <div style={styles.sectionLabel}>Direct Inquiry</div>
             <h2 style={styles.sectionTitle}>Send a Message</h2>

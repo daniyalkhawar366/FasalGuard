@@ -10528,3 +10528,40 @@ main {
     padding: 0.9rem;
   }
 }
+
+@media (max-width: 1024px) {
+  .sat-location-layout,
+  .sat-hero-banner-inner {
+    grid-template-columns: 1fr;
+  }
+  .sat-hero-visual {
+    grid-template-columns: 1fr;
+  }
+  .sat-metrics-grid,
+  .sat-bench-grid,
+  .sat-rec-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .sat-metrics-grid,
+  .sat-bench-grid,
+  .sat-rec-grid,
+  .sat-history-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .sat-header {
+    padding: 0.5rem;
+  }
+  .sat-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+  .sat-hero-heading {
+    font-size: 2rem !important;
+  }
+  .sat-main-card, .sat-results {
+    padding: 1rem;
+  }
+}

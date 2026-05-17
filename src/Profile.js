@@ -458,13 +458,13 @@ export default function Profile() {
 
   return (
     <div style={styles.page}>
-      <header style={styles.header}>
+      <header style={styles.header} className="resp-header">
         <div style={styles.headerInner}>
           <button type="button" style={styles.brand} onClick={() => navigate('/home')}>
             <Leaf size={22} />
             <span>FasalGuard</span>
           </button>
-          <nav style={styles.nav}>
+          <nav style={styles.nav} className="resp-nav">
             <button type="button" style={styles.navLink} onClick={() => navigate('/about')}>About Us</button>
             <button type="button" style={styles.navLink} onClick={() => navigate('/services')}>Services</button>
             <button type="button" style={styles.navLink} onClick={() => navigate('/contact')}>Contact Us</button>
@@ -487,14 +487,14 @@ export default function Profile() {
         <section style={styles.hero}>
           <img src="/account_bg.png" alt="FasalGuard farm dashboard" style={styles.heroImage} />
           <div style={styles.heroOverlay} />
-          <div style={styles.heroText}>
+          <div style={styles.heroText} className="resp-hero-content">
             <div style={styles.kicker}>Account Overview</div>
-            <h1 style={styles.title}>{name || 'FasalGuard Farmer'}</h1>
+            <h1 style={styles.title} className="resp-hero-title">{name || 'FasalGuard Farmer'}</h1>
             <p style={styles.subtitle}>A compact farm-focused account page for managing your profile, password, and alerts without adding extra clutter.</p>
           </div>
         </section>
 
-        <section style={styles.grid}>
+        <section style={styles.grid} className="resp-grid">
           <div style={{ ...styles.card, ...styles.formCard }}>
             <div>
               <div style={styles.labelBlock}>Profile Details</div>

@@ -791,7 +791,8 @@ export default function CropPredictionPage() {
         }
         @media (max-width: 768px) {
           .page-title { font-size: 2.5rem; }
-          .cities-row { grid-template-columns: repeat(2, 1fr); }
+          .cities-row { grid-template-columns: repeat(2, 1fr) !important; }
+          .city-card { height: 120px !important; }
           .duration-buttons { flex-direction: column; }
           .grid2col { grid-template-columns: 1fr; }
         }
@@ -868,13 +869,13 @@ export default function CropPredictionPage() {
                   <Sprout size={24} color="#22c55e" />
                   {t('selectGrowingRegion', 'Select Your Growing Region')}
                 </div>
-                <div style={styles.citiesRow}>
+                <div style={styles.citiesRow} className="cities-row">
                   {supportedCities.map((city, index) => (
                     <motion.div
                       key={city.name}
                       style={{ ...styles.cityCard, ...(predictionData.city === city.name ? styles.cityCardSelected : {}) }}
                       onClick={() => selectCity(city.name)}
-                      className="city-card-hover"
+                      className="city-card-hover city-card"
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.5 }}

@@ -511,7 +511,7 @@ export default function EnhancedCropComparison({ predictionData, city }) {
         </div>
 
         {/* Charts Section */}
-        <div style={{ 
+        <div className="resp-grid-2" style={{ 
           display: 'grid', 
           gridTemplateColumns: '1fr 1fr', 
           gap: '2rem',
